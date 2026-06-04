@@ -224,7 +224,7 @@ function App() {
             </div>
           </div>
         </main>
-      </MainContent>
+      </MainContent> 
     </SidebarProvider>
   )
 }
