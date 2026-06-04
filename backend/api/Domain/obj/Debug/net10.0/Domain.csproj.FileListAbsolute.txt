@@ -20,3 +20,4 @@ C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Domain\obj\D
 C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Domain\obj\Debug\net10.0\refint\Domain.dll
 C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Domain\obj\Debug\net10.0\Domain.pdb
 C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Domain\obj\Debug\net10.0\ref\Domain.dll
+C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Domain\obj\Debug\net10.0\Domain.sourcelink.json

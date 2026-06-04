@@ -1,10 +1,12 @@
 using Entrypoint.Middlewares;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
 // DB Context
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Service
 
@@ -20,5 +22,5 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-// await app.MigrateDbAcd
+await app.MigrateDbAsync();
 app.Run();

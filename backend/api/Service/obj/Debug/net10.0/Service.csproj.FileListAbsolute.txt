@@ -28,3 +28,4 @@ C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Service\obj\
 C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Service\obj\Debug\net10.0\refint\Service.dll
 C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Service\obj\Debug\net10.0\Service.pdb
 C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Service\obj\Debug\net10.0\ref\Service.dll
+C:\Users\kroxa\OneDrive\Documents\repository\work\e-sea\backend\api\Service\obj\Debug\net10.0\Service.sourcelink.json

@@ -32,7 +32,7 @@ db-down:
 
 migration:
 	@[ -n "$(name)" ] || (echo "Usage: make migration name=<MigrationName>" && exit 1)
-	dotnet ef migrations add $(name) --project src/Infrastructure --startup-project $(ENTRYPOINT)
+	dotnet ef migrations add $(name) --project api/Infrastructure --startup-project $(ENTRYPOINT)
 
 migrate:
-	dotnet ef database update --project src/Infrastructure --startup-project $(ENTRYPOINT)
+	dotnet ef database update --project api/Infrastructure --startup-project $(ENTRYPOINT)
