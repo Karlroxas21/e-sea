@@ -2,7 +2,6 @@ using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Ports;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 
 namespace Infrastructure.Persistence;
 

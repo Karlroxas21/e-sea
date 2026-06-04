@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Exceptions;
 using Domain.Ports;
 using Service.Dtos;
 using Service.Ports;
@@ -29,6 +30,8 @@ public class AuthService : IAuthService
 
     public async Task Register(UserRegister request, CancellationToken ct = default)
     {
+        ValidatePassword(request.Password);
+
         string hashedPw = BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 12);
 
         var user = User.Create(
@@ -38,5 +41,33 @@ public class AuthService : IAuthService
         );
 
         await _userRepository.AddAsync(user, ct);
+    }
+
+    private static void ValidatePassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
+        {
+            throw new ValidationException("Password must be at least 8 characters long.");
+        }
+
+        if (!password.Any(char.IsUpper))
+        {
+            throw new ValidationException("Password must contain at least one uppercase letter.");
+        }
+
+        if (!password.Any(char.IsLower))
+        {
+            throw new ValidationException("Password must contain at least one lowercase letter.");
+        }
+
+        if (!password.Any(char.IsDigit))
+        {
+            throw new ValidationException("Password must contain at least one digit.");
+        }
+
+        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+        {
+            throw new ValidationException("Password must contain at least one special character.");
+        }
     }
 }
