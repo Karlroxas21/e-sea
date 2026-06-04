@@ -1,3 +1,5 @@
+using Domain.Ports;
+using Infrastructure.Jwt;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +14,13 @@ public static class DependencyInjection
     {
         services.AddDbContext<ESeaDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Default")));
+
+        // JWT
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+        services.AddScoped<IJwtProvider, JwtProvider>();    
+
+        // Repositories
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
