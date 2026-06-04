@@ -17,7 +17,7 @@ public static class DependencyInjection
 
         // JWT
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
-        services.AddScoped<IJwtProvider, JwtProvider>();    
+        services.AddScoped<IJwtProvider, JwtProvider>();
 
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();

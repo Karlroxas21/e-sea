@@ -14,7 +14,7 @@ public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRep
     public ComplianceAndRequirementsRepository(ESeaDbContext db) => _db = db;
     public async Task<PagedResult<ComplianceAndRequirements>> GetAllAsync(int Page, int PageSize, BaseQuery query, CancellationToken ct = default)
     {
-        var q =  _db.ComplianceAndRequirements.Where(c => c.DeletedAt == null);
+        var q = _db.ComplianceAndRequirements.Where(c => c.DeletedAt == null);
 
         q = ApplySort(q, query.Sort, query.Order);
 
@@ -26,7 +26,7 @@ public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRep
             .ToListAsync(ct);
 
         return new PagedResult<ComplianceAndRequirements>(Items, Page, PageSize, Total);
-        
+
     }
 
     private static IQueryable<ComplianceAndRequirements> ApplySort(IQueryable<ComplianceAndRequirements> query, Sort? sort, Order? order)

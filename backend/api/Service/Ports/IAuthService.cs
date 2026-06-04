@@ -1,6 +1,6 @@
 using Service.Dtos;
 
-namespace  Service.Ports;
+namespace Service.Ports;
 
 public interface IAuthService
 {
