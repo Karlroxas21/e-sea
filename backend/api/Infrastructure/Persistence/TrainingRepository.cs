@@ -10,11 +10,18 @@ namespace Infrastructure.Persistence;
 public class TrainingRepository : ITrainingRepository
 {
     private readonly ESeaDbContext _db;
+    private readonly IUserContext _userContext;
 
-    public TrainingRepository(ESeaDbContext db) => _db = db;
+    public TrainingRepository(ESeaDbContext db, IUserContext userContext)
+    {
+        _db = db;
+        _userContext = userContext;
+    }
+
     public async Task<PagedResult<Trainings>> GetAllAsync(int Page, int PageSize, BaseQuery query, CancellationToken ct = default)
     {
-        var q = _db.Trainings.Where(c => c.DeletedAt == null);
+        var q = _db.Trainings
+            .Where(c => c.DeletedAt == null && c.UserId == _userContext.UserId);
 
         q = ApplySort(q, query.Sort, query.Order);
 

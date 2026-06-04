@@ -10,11 +10,18 @@ namespace Infrastructure.Persistence;
 public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRepository
 {
     private readonly ESeaDbContext _db;
+    private readonly IUserContext _userContext;
 
-    public ComplianceAndRequirementsRepository(ESeaDbContext db) => _db = db;
+    public ComplianceAndRequirementsRepository(ESeaDbContext db, IUserContext userContext)
+    {
+        _db = db;
+        _userContext = userContext;
+    }
+
     public async Task<PagedResult<ComplianceAndRequirements>> GetAllAsync(int Page, int PageSize, BaseQuery query, CancellationToken ct = default)
     {
-        var q = _db.ComplianceAndRequirements.Where(c => c.DeletedAt == null);
+        var q = _db.ComplianceAndRequirements
+            .Where(c => c.DeletedAt == null && c.UserId == _userContext.UserId);
 
         q = ApplySort(q, query.Sort, query.Order);
 
