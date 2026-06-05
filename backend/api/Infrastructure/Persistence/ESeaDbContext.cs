@@ -10,6 +10,7 @@ public class ESeaDbContext(DbContextOptions<ESeaDbContext> options) : DbContext(
     public DbSet<RecentActivityFeed> RecentActivityFeeds => Set<RecentActivityFeed>();
     public DbSet<Trainings> Trainings => Set<Trainings>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<BlacklistedToken> BlacklistedTokens => Set<BlacklistedToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

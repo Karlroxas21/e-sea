@@ -1,4 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Domain.Ports;
 using Entrypoint.Middlewares;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +27,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!))
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var blacklistedTokenRepository = context.HttpContext.RequestServices.GetRequiredService<IBlacklistedTokenRepository>();
+                var token = context.SecurityToken as JwtSecurityToken;
+
+                if (token != null && await blacklistedTokenRepository.IsBlacklistedAsync(token.RawData, context.HttpContext.RequestAborted))
+                {
+                    context.Fail("This token is blacklisted.");
+                }
+            }
         };
     });
 builder.Services.AddAuthorization();

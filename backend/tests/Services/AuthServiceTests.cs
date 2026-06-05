@@ -13,8 +13,38 @@ public class AuthServiceTests
 {
     private readonly Mock<IUserRepository> _userRepo = new(MockBehavior.Strict);
     private readonly Mock<IJwtProvider> _jwt = new(MockBehavior.Strict);
+    private readonly Mock<IBlacklistedTokenRepository> _blacklistRepo = new(MockBehavior.Strict);
 
-    private AuthService CreateSut() => new(_userRepo.Object, _jwt.Object);
+    private AuthService CreateSut() => new(_userRepo.Object, _jwt.Object, _blacklistRepo.Object);
+
+    [Fact]
+    public async Task Logout_AddsTokenToBlacklist()
+    {
+        // To test Logout, we need a string that looks like a JWT so JwtSecurityTokenHandler can read it.
+        // A simple way is to use a known valid-looking token or generate one.
+        // For simplicity, I'll use a token that has the required 3 parts.
+        // But since AuthService calls ReadJwtToken, it must be a valid JWT.
+        
+        var user = TestEntityFactory.User(Guid.NewGuid(), email: "captain@example.com", fullName: "Captain");
+        var options = new Infrastructure.Jwt.JwtOptions
+        {
+            SecretKey = "very-secret-key-that-is-long-enough-32-chars",
+            Issuer = "issuer",
+            Audience = "audience",
+            DurationInMinutes = 60
+        };
+        var jwtProvider = new Infrastructure.Jwt.JwtProvider(Microsoft.Extensions.Options.Options.Create(options));
+        var token = jwtProvider.GenerateToken(user);
+
+        _blacklistRepo.Setup(r => r.AddAsync(token, It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var sut = CreateSut();
+
+        await sut.Logout(token);
+
+        _blacklistRepo.Verify(r => r.AddAsync(token, It.IsAny<DateTime>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
 
     [Fact]
     public async Task Login_ReturnsUserResponseWithJwt_WhenCredentialsValid()
