@@ -1,63 +1,121 @@
+import { useEffect, useState } from "react"
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import axios from "axios"
 
-const NEWS_DATA = [
-  {
-    id: 1,
-    category: "Industry",
-    title: "Enhance Maritime Services with new digital tools",
-    date: "Apr 25, 2026",
-    readTime: "3 min read",
-    color: "bg-blue",
-  },
-  {
-    id: 2,
-    category: "Updates",
-    title: "STCW renewal process updates effective Q3",
-    date: "Apr 20, 2026",
-    readTime: "5 min read",
-    color: "bg-purple",
-  },
-  {
-    id: 3,
-    category: "Training",
-    title: "New simulator training program launches",
-    date: "Apr 18, 2026",
-    readTime: "2 min read",
-    color: "bg-green",
-  },
-]
+interface NewsItem {
+  id: string
+  category: string
+  title: string
+  publishDate: string
+  readTimeMinutes: number
+  thumbnailUrl: string
+  contentUrl: string
+}
 
 export function Appnews() {
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setIsLoading(true)
+        setError(null)
+        
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
+        
+        const token = localStorage.getItem("authToken")
+        
+        const response = await axios.get(`${API_BASE_URL}/news?page=1`, {
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            ...(token && { "Authorization": `Bearer ${token}` })
+          },
+        })
+
+        if (response.data && response.data.items) {
+          setNewsItems(response.data.items.slice(0, 3))
+        }
+      } catch (err: any) {
+        console.error("Error loading news feed:", err)
+        if (err.response?.status === 401) {
+          setError("Your session has expired. Please sign in again.")
+        } else {
+          setError("Unable to load latest news updates.")
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchNews()
+  }, [])
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-sm font-bold text-slate-900 uppercase tracking-tight">Latest News</h3>
-      <div className="grid gap-4 md:grid-cols-3 cursor-pointer">
-        {NEWS_DATA.map((news) => (
-          <Card key={news.id} className="overflow-hidden border-slate-200/60 shadow-sm">
-            <div className={`relative aspect-[3/1] w-full ${news.color} flex items-center justify-center`}>
-              <span className="absolute top-3 left-3 bg-white/90 px-2 py-0.5 rounded text-[10px] font-black uppercase text-slate-800 tracking-widest">
-                {news.category}
-              </span>
-              <div className="opacity-20 scale-150">
-              </div>
-            </div>
+      
+      {isLoading && (
+        <div className="grid gap-4 md:grid-cols-3 animate-pulse">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="h-48 bg-slate-100 rounded-xl border border-slate-200/60" />
+          ))}
+        </div>
+      )}
 
-            <CardHeader className="p-4">
-              <CardTitle className="text-sm font-bold leading-tight text-slate-900">
-                {news.title}
-              </CardTitle>
-              <CardDescription className="text-[11px] font-medium text-slate-400 mt-1">
-                {news.date} • {news.readTime}
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
+      {error && !isLoading && (
+        <div className="p-4 text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <div className="grid gap-4 md:grid-cols-3">
+          {newsItems.map((news) => (
+            <Card 
+              key={news.id} 
+              onClick={() => window.open(news.contentUrl, "_blank", "noopener,noreferrer")}
+              className="overflow-hidden border-slate-200/60 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer group"
+            >
+              <div className="relative aspect-[16/9] w-full bg-slate-100 overflow-hidden">
+                <img 
+                  src={news.thumbnailUrl} 
+                  alt={news.title}
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+                <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded text-[10px] font-black uppercase text-slate-800 tracking-widest shadow-xs">
+                  {news.category}
+                </span>
+              </div>
+
+              <CardHeader className="p-4">
+                <CardTitle className="text-sm font-bold leading-tight text-slate-900 group-hover:text-slate-800 transition-colors line-clamp-2 min-h-[40px]">
+                  {news.title}
+                </CardTitle>
+                <CardDescription className="text-[11px] font-medium text-slate-400 mt-2">
+                  {formatDate(news.publishDate)} • {news.readTimeMinutes} min read
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

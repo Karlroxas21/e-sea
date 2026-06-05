@@ -10,6 +10,7 @@ import {
   FolderOpen,
   Newspaper,
   Settings,
+  LogOut,
 } from "lucide-react"
 
 import {
@@ -44,6 +45,29 @@ const activityNavItems = [
 ]
 
 export function AppSidebar() {
+  const handleSignOut = async () => {
+    try {
+      const baseUrl = window.location.origin 
+      
+      const response = await fetch(`${baseUrl}/v1/api/auth/logout`, {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to cleanly terminate server session wrapper.")
+      }
+
+      localStorage.clear()
+      window.location.href = ""
+    } catch (error) {
+      console.error("Sign out process failed:", error)
+      window.location.href = "/"
+    }
+  }
+
   return (
     <Sidebar collapsible="none" className="border-y-0 border-slate-300">
       <SidebarHeader className="p-6">
@@ -111,7 +135,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-slate-300 cursor-pointer">
+      <SidebarFooter className="p-4 border-t border-slate-300">
         <div className="flex items-center justify-between w-full px-2">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-[#0B2545] flex items-center justify-center text-white text-xs font-bold">
@@ -122,9 +146,18 @@ export function AppSidebar() {
               <span className="text-[10px] text-slate-500 font-medium">Demo 1</span>
             </div>
           </div>
-          <button className="h-8 w-8 text-slate-400 hover:text-slate-600 cursor-pointer">
-            <Settings className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button className="h-8 w-8 flex items-center justify-center text-slate-400 hover:text-slate-600 cursor-pointer rounded-md hover:bg-slate-50 transition-colors">
+              <Settings className="h-4 w-4" />
+            </button>
+            <button 
+              onClick={handleSignOut}
+              className="h-8 w-8 flex items-center justify-center text-slate-400 hover:text-red-600 cursor-pointer rounded-md hover:bg-red-50 transition-colors"
+              title="Sign Out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>

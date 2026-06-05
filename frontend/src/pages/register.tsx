@@ -1,47 +1,53 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
+import axios from "axios" 
 
 export default function RegisterPage() {
-    const navigate = useNavigate()
-    const [fullName, setFullName] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const [fullName, setFullName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
-        setError(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError(null)
 
     try {
-     
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
-      const response = await fetch(`${API_BASE_URL}/v1/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, fullName }),
-      })
+      
+      await axios.post(
+        `${API_BASE_URL}/auth/register`,
+        { email, password, fullName },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      )
 
-      if (!response.ok) throw new Error("Registration failed. Account might already exist.")
-      const data = await response.json()
-
-        navigate("/") 
+      navigate("/", { 
+        state: { successMessage: "Registration successful! You can now login." } 
+      }) 
     } catch (err: any) {
-         setError(err.message || "Something went wrong during registration. Please try again.")
+      const errorMessage = err.response?.data?.message || err.message || "Something went wrong during registration."
+      setError(errorMessage)
     } finally {
-        setIsLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -59,12 +65,6 @@ export default function RegisterPage() {
             
             <CardContent>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    {error && (
-                    <div className="p-3 text-xs bg-red-50 text-red-600 rounded-lg border border-red-100 font-medium">
-                        {error}
-                    </div>
-                    )}
-                    
                     <div className="grid gap-2">
                         <Label htmlFor="fullName" className="text-slate-700">Full Name</Label>
                         <Input
@@ -111,26 +111,26 @@ export default function RegisterPage() {
                         type="submit" 
                         className="w-full mt-2 bg-slate-900 text-white hover:bg-slate-800 transition-colors"
                         disabled={isLoading}
-                        >
+                    >
                         {isLoading ? "Creating account..." : "Register"}
                     </Button>
                 </form>
             </CardContent>
 
             <CardFooter className="flex-col gap-4">
-            <div className="relative w-full">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-slate-100" />
+                <div className="relative w-full">
+                    <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t border-slate-100" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                    <   span className="bg-white px-2 text-slate-400">Or continue with</span>
+                    </div>
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white px-2 text-slate-400">Or continue with</span>
-                </div>
-            </div>
-            
-            <Button variant="outline" className="w-full border-slate-200 hover:bg-slate-50" disabled={isLoading}>
-                Sign up with Google
-            </Button>
-            
+                
+                <Button variant="outline" className="w-full border-slate-200 hover:bg-slate-50" disabled={isLoading}>
+                    Sign up with Google
+                </Button>
+                
                 <p className="text-xs text-center text-slate-500">
                     Already have an account?{" "}
                     <a href="#" onClick={(e) => { e.preventDefault(); navigate("/"); }} 

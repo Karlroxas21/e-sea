@@ -1,21 +1,169 @@
+import { useEffect, useState } from "react"
 import { Appnews } from "@/components/app-news"
 import { 
   Download, 
   Upload, 
   Users, 
-  Check, 
-  X,
   NotebookPen,
   Clock, 
   MapPin,
   AlertTriangle, 
   User, 
   Calendar,
-  StickyNote 
+  StickyNote,
+  Bell
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import axios from "axios"
+
+interface ActivityItem {
+  id: string
+  activityType: string
+  title: string
+  description: string
+  userId: string
+  createdAt: string
+}
+
+interface ComplianceData {
+  score: number
+  details: {
+    missing: number
+    "expired/expiringsoon/pending": number
+  }
+}
 
 function Dashboard() { 
+  const [activities, setActivities] = useState<ActivityItem[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const [compliance, setCompliance] = useState<ComplianceData | null>(null)
+  const [isComplianceLoading, setIsComplianceLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setIsLoading(true)
+        setIsComplianceLoading(true)
+        setError(null)
+        
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
+        const token = localStorage.getItem("authToken")
+        
+        const configHeaders = {
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+            ...(token ? { "Authorization": `Bearer ${token}` } : {})
+          }
+        }
+
+        const [activitiesRes, complianceRes] = await Promise.all([
+          axios.get(`${API_BASE_URL}/recent-activities?page=1`, configHeaders),
+          axios.get(`${API_BASE_URL}/compliance-requirements/score`, configHeaders)
+        ])
+
+        if (activitiesRes.data && activitiesRes.data.items) {
+          setActivities(activitiesRes.data.items.slice(0, 5))
+        }
+
+        if (complianceRes.data) {
+          setCompliance(complianceRes.data)
+        }
+
+      } catch (err: any) {
+        console.error("Error loading dashboard modules:", err)
+        setError("Could not retrieve current your dashboard account details.")
+      } finally {
+        setIsLoading(false)
+        setIsComplianceLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  const getRelativeTime = (dateString: string) => {
+    try {
+      const now = new Date()
+      const past = new Date(dateString)
+      const msPerMinute = 60 * 1000
+      const msPerHour = msPerMinute * 60
+      const msPerDay = msPerHour * 24
+      const msPerWeek = msPerDay * 7
+      
+      const elapsed = now.getTime() - past.getTime()
+
+      if (elapsed < msPerMinute) return "Just now"
+      if (elapsed < msPerHour) return `${Math.round(elapsed / msPerMinute)}m ago`
+      if (elapsed < msPerDay) return `${Math.round(elapsed / msPerHour)}h ago`
+      if (elapsed < msPerWeek) {
+        const days = Math.round(elapsed / msPerDay)
+        return days === 1 ? "Yesterday" : `${days} days ago`
+      }
+      
+      const weeks = Math.round(elapsed / msPerWeek)
+      return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`
+    } catch {
+      return "Recent"
+    }
+  }
+
+  const getActivityStyles = (type: string) => {
+    switch (type) {
+      case "Login":
+        return {
+          icon: <User className="h-4 w-4" />,
+          containerClass: "bg-slate-50 text-slate-600 border border-slate-200/50"
+        }
+      case "Document":
+        return {
+          icon: <Upload className="h-4 w-4" />,
+          containerClass: "bg-blue-50 text-blue-600 border border-blue-100/50"
+        }
+      case "Training":
+        return {
+          icon: <NotebookPen className="h-4 w-4" />,
+          containerClass: "bg-emerald-50 text-emerald-600 border border-emerald-100/50"
+        }
+      case "Compliance":
+        return {
+          icon: <AlertTriangle className="h-4 w-4" />,
+          containerClass: "bg-amber-50 text-amber-600 border border-amber-100/50"
+        }
+      case "Notification":
+        return {
+          icon: <Bell className="h-4 w-4" />,
+          containerClass: "bg-purple-50 text-purple-600 border border-purple-100/50"
+        }
+      default:
+        return {
+          icon: <StickyNote className="h-4 w-4" />,
+          containerClass: "bg-gray-50 text-gray-600 border border-gray-200/50"
+        }
+    }
+  }
+
+  const currentScore = compliance?.score ?? 0
+  const missingCount = compliance?.details?.missing ?? 0
+  const issueCount = compliance?.details?.["expired/expiringsoon/pending"] ?? 0
+  
+  const greenBarWidth = currentScore
+
+  const remainingPercentage = 100 - currentScore
+  const totalDeficitCount = missingCount + issueCount
+
+  let amberBarWidth = 0
+  let redBarWidth = 0
+
+  if (remainingPercentage > 0 && totalDeficitCount > 0) {
+    amberBarWidth = (issueCount / totalDeficitCount) * remainingPercentage
+    redBarWidth = (missingCount / totalDeficitCount) * remainingPercentage
+  } else if (remainingPercentage > 0 && totalDeficitCount === 0) {
+    redBarWidth = remainingPercentage 
+  }
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -33,7 +181,12 @@ function Dashboard() {
         <div className="flex flex-col gap-4">
           <div>
             <span className="text-slate-300 text-xs font-medium uppercase tracking-wider">Welcome back, Darryl</span>
-            <h2 className="text-2xl font-bold tracking-tight mt-1">Your overall compliance is <span className="text-gold">31%</span></h2>
+            <h2 className="text-2xl font-bold tracking-tight mt-1">
+              Your overall compliance is{" "}
+              <span className="text-gold">
+                {isComplianceLoading ? "..." : `${currentScore}%`}
+              </span>
+            </h2>
           </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-300">
             <div className="flex items-center gap-2">
@@ -54,13 +207,25 @@ function Dashboard() {
         <div className="flex flex-col items-end gap-1.5 min-w-[200px] w-full md:w-auto border-l border-slate-700/60 pl-0 md:pl-6">
           <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Compliance Score</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-black tracking-tight">31</span>
+            <span className="text-3xl font-black tracking-tight">
+              {isComplianceLoading ? "..." : currentScore}
+            </span>
             <span className="text-slate-400 text-sm font-semibold">%</span>
           </div>
+
           <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mt-1 flex">
-            <div className="h-full bg-green-500 w-[31%]" />
-            <div className="h-full bg-amber-500 w-[11%]" />
-            <div className="h-full bg-red-500 w-[58%]" />
+            <div 
+              className="h-full bg-green-500 transition-all duration-300" 
+              style={{ width: `${greenBarWidth}%` }} 
+            />
+            <div 
+              className="h-full bg-amber-500 transition-all duration-300" 
+              style={{ width: `${amberBarWidth}%` }} 
+            />
+            <div 
+              className="h-full bg-red-500 transition-all duration-300" 
+              style={{ width: `${redBarWidth}%` }} 
+            />
           </div>
         </div>
       </div>
@@ -73,8 +238,10 @@ function Dashboard() {
         </div>
         
         <div className="bg-white border border-slate-200/60 p-5 rounded-xl shadow-sm flex flex-col gap-1">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending Documents</span>
-          <span className="text-3xl font-bold tracking-tight text-red-500 mt-1">5</span>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending/Missing Documents</span>
+          <span className="text-3xl font-bold tracking-tight text-red-500 mt-1">
+            {isComplianceLoading ? "..." : missingCount}
+          </span>
           <span className="text-xs text-slate-500 mt-2">Upload required to proceed</span>
         </div>
 
@@ -116,7 +283,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Bottom Main Content Logs Split */}
       <div className="grid gap-6 md:grid-cols-3">
         <div className="md:col-span-2 bg-white border border-slate-200/60 rounded-xl p-5 shadow-sm flex flex-col gap-4">
           <div className="flex items-center justify-between">
@@ -125,56 +291,43 @@ function Dashboard() {
           </div>
 
           <div className="flex flex-col gap-4">
-            <div className="flex items-start gap-4 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
-              <div className="h-8 w-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600 shrink-0">
-                <Check className="h-4 w-4" />
+            {isLoading && (
+              <div className="space-y-4 animate-pulse">
+                {[1, 2, 3].map((n) => (
+                  <div key={n} className="flex gap-4 items-center">
+                    <div className="h-8 w-8 bg-slate-100 rounded-lg" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 bg-slate-100 rounded w-1/3" />
+                      <div className="h-2 bg-slate-50 rounded w-1/2" />
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-slate-900 truncate">Advanced Fire Fighting certificate verified</h5>
-                <p className="text-xs text-slate-500 mt-0.5">Document approved by compliance officer</p>
+            )}
+
+            {error && !isLoading && (
+              <div className="p-3 text-xs text-red-600 bg-red-50 rounded-lg border border-red-100">
+                {error}
               </div>
-              <span className="text-xs text-slate-400 shrink-0 font-medium">2h ago</span>
-            </div>
-            <div className="flex items-start gap-4 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
-              <div className="h-8 w-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 shrink-0">
-                <Upload className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-slate-900 truncate">Passport scan uploaded</h5>
-                <p className="text-xs text-slate-500 mt-0.5">Awaiting verification</p>
-              </div>
-              <span className="text-xs text-slate-400 shrink-0 font-medium">Yesterday</span>
-            </div>
-            <div className="flex items-start gap-4 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
-              <div className="h-8 w-8 bg-amber-50 rounded-lg flex items-center justify-center text-amber-600 shrink-0">
-                <AlertTriangle className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-slate-900 truncate">Basic Safety Training expiring soon</h5>
-                <p className="text-xs text-slate-500 mt-0.5">Renewal due May 08, 2026</p>
-              </div>
-              <span className="text-xs text-slate-400 shrink-0 font-medium">2 days ago</span>
-            </div>
-            <div className="flex items-start gap-4 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
-              <div className="h-8 w-8 bg-red-50 rounded-lg flex items-center justify-center text-red-600 shrink-0">
-                <X className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-slate-900 truncate">NBI Clearance expired</h5>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">Action required: submit renewal request</p>
-              </div>
-              <span className="text-xs text-slate-400 shrink-0 font-medium">5 days ago</span>
-            </div>
-            <div className="flex items-start gap-4 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
-              <div className="h-8 w-8 bg-gray-50 rounded-lg flex items-center justify-center text-gray shrink-0">
-                <StickyNote className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-slate-900 truncate">Course request: Crisis Management refresher</h5>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">Request submitted to training department</p>
-              </div>
-              <span className="text-xs text-slate-400 shrink-0 font-medium">1 week ago</span>
-            </div>
+            )}
+
+            {!isLoading && !error && activities.map((activity) => {
+              const styles = getActivityStyles(activity.activityType)
+              return (
+                <div key={activity.id} className="flex items-start gap-4 pb-3 border-b border-slate-100 last:border-0 last:pb-0">
+                  <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${styles.containerClass}`}>
+                    {styles.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h5 className="text-sm font-semibold text-slate-900 truncate">{activity.title}</h5>
+                    <p className="text-xs text-slate-500 mt-0.5 leading-normal">{activity.description}</p>
+                  </div>
+                  <span className="text-xs text-slate-400 shrink-0 font-medium ml-2">
+                    {getRelativeTime(activity.createdAt)}
+                  </span>
+                </div>
+              )
+            })}
           </div>
         </div>
 

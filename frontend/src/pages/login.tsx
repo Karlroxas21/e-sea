@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
-import axios from "axios" // 1. Import Axios
+import axios from "axios"
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/login`,
+        `${API_BASE_URL}/auth/login`,
         { email, password },
         {
           headers: {
@@ -40,11 +40,11 @@ export default function LoginPage() {
       )
 
       const data = response.data
-      
-      if (data.token) {
-        localStorage.setItem("authToken", data.token)
-      }
 
+      if (data && data.jwt) {
+        localStorage.setItem("authToken", data.jwt)
+        console.log("Token successfully stored in localStorage!")
+      }
       navigate("/pages/dashboard") 
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || err.message || "Something went wrong."
