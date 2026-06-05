@@ -6,12 +6,27 @@
     --link-water: #EFF6FF;
     --periwinkle-gray: #D4DFEE;
     --pirate-gold: #D4AF37;
+    --purple-bg: #7357C7;
+    --dark-purple-bg: #DCD7EB;
+    --green-bg: #00897B;
+    --dark-green-bg: #004D40;
+    --blue-bg: #4A90E2;
+    --dark-blue-bg: #2D6CB8;
+    --uts-dark-bg: #0A2547;
   }
 }
 
 @layer utilities {
   .bg-uts-main {
     background-color: var(--uts-main-bg);
+  }
+
+  .bg-uts-dark {
+    background-color: var(--uts-dark-bg);
+  }
+
+   .text-uts-dark {
+    color: var(--uts-dark-bg);
   }
 
   .search-bg {
@@ -25,7 +40,19 @@
   .text-gold {
     color: var(--pirate-gold);
   }
-  
+
+  .bg-purple {
+    background-image: linear-gradient(to right, var(--purple-bg), var(--dark-purple-bg));
+  }
+
+  .bg-green {
+    background-image: linear-gradient(to right, var(--green-bg), var(--dark-green-bg));
+  }
+
+  .bg-blue {
+    background-image: linear-gradient(to right, var(--blue-bg), var(--dark-blue-bg));
+  }
+
   #root {
     background-color: var(--uts-main-bg);
   }

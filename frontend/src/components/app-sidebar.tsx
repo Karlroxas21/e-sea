@@ -111,7 +111,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-slate-300">
+      <SidebarFooter className="p-4 border-t border-slate-300 cursor-pointer">
         <div className="flex items-center justify-between w-full px-2">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-[#0B2545] flex items-center justify-center text-white text-xs font-bold">
@@ -122,7 +122,7 @@ export function AppSidebar() {
               <span className="text-[10px] text-slate-500 font-medium">Demo 1</span>
             </div>
           </div>
-          <button className="h-8 w-8 text-slate-400 hover:text-slate-600">
+          <button className="h-8 w-8 text-slate-400 hover:text-slate-600 cursor-pointer">
             <Settings className="h-4 w-4" />
           </button>
         </div>
