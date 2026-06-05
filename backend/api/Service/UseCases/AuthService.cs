@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Ports;
@@ -10,11 +11,13 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IBlacklistedTokenRepository _blacklistedTokenRepository;
 
-    public AuthService(IUserRepository userRepository, IJwtProvider jwtProvider)
+    public AuthService(IUserRepository userRepository, IJwtProvider jwtProvider, IBlacklistedTokenRepository blacklistedTokenRepository)
     {
         _userRepository = userRepository;
         _jwtProvider = jwtProvider;
+        _blacklistedTokenRepository = blacklistedTokenRepository;
     }
 
     public async Task<UserResponse> Login(string email, string password, CancellationToken ct = default)
@@ -42,6 +45,16 @@ public class AuthService : IAuthService
 
         await _userRepository.AddAsync(user, ct);
     }
+
+    public async Task Logout(string token, CancellationToken ct = default)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        var expiresAt = jwtToken.ValidTo;
+
+        await _blacklistedTokenRepository.AddAsync(token, expiresAt, ct);
+    }
+
 
     private static void ValidatePassword(string password)
     {

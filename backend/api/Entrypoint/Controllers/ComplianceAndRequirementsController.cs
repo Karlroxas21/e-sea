@@ -28,4 +28,13 @@ public class ComplianceAndRequirementsController : ControllerBase
 
         return Ok(data);
     }
+
+    [Authorize]
+    [HttpGet("score")]
+    public async Task<IActionResult> GetComplianceScore(CancellationToken ct = default)
+    {
+        var score = await _complianceAndRequirementsService.GetComplianceScoreAsync(ct);
+        return Ok(score);
+    }
 }
+

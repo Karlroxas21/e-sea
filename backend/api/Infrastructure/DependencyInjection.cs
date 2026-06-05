@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<INewsRepository, NewsRepository>();
         services.AddScoped<IRecentActivityRepository, RecentActivityRepository>();
         services.AddScoped<ITrainingRepository, TrainingRepository>();
+        services.AddScoped<IBlacklistedTokenRepository, BlacklistedTokenRepository>();
 
         return services;
     }

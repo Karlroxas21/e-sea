@@ -128,4 +128,43 @@ public class ComplianceAndRequirementsRepositoryTests
 
         Assert.Equal(new[] { "oldest", "middle", "newest" }, result.Items.Select(c => c.DocumentName));
     }
+
+    [Fact]
+    public async Task GetComplianceScore_ReturnsCorrectPercentageAndDetails()
+    {
+        var userId = Guid.NewGuid();
+        using var db = TestDbContextFactory.Create();
+        db.ComplianceAndRequirements.AddRange(
+            TestEntityFactory.Compliance(userId, status: "Valid"),
+            TestEntityFactory.Compliance(userId, status: "Signed"),
+            TestEntityFactory.Compliance(userId, status: "Expired"),
+            TestEntityFactory.Compliance(userId, status: "Missing"),
+            TestEntityFactory.Compliance(userId, status: "Expiring Soon")
+        );
+        await db.SaveChangesAsync();
+
+        var repo = new ComplianceAndRequirementsRepository(db, new StubUserContext(userId));
+
+        var result = await repo.GetComplianceScore(userId);
+
+        // 2 Valid/Signed out of 5 total = 40%
+        Assert.Equal(40, result.Score);
+        Assert.Equal(1, result.MissingCount);
+        // Expired (1) + Expiring Soon (1) = 2
+        Assert.Equal(2, result.ExpiredExpiringSoonPendingCount);
+    }
+
+    [Fact]
+    public async Task GetComplianceScore_Returns100_WhenNoRecordsExist()
+    {
+        var userId = Guid.NewGuid();
+        using var db = TestDbContextFactory.Create();
+        var repo = new ComplianceAndRequirementsRepository(db, new StubUserContext(userId));
+
+        var result = await repo.GetComplianceScore(userId);
+
+        Assert.Equal(100, result.Score);
+        Assert.Equal(0, result.MissingCount);
+        Assert.Equal(0, result.ExpiredExpiringSoonPendingCount);
+    }
 }

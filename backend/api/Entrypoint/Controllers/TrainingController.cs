@@ -28,4 +28,12 @@ public class TrainingController : ControllerBase
 
         return Ok(data);
     }
+
+    [Authorize]
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetTrainingStats(CancellationToken ct = default)
+    {
+        var stats = await _trainingService.GetTrainingStatsAsync(ct);
+        return Ok(stats);
+    }
 }

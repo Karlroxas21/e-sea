@@ -35,6 +35,21 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(CancellationToken ct)
+    {
+        var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+
+        if (string.IsNullOrEmpty(token))
+        {
+            return BadRequest("Token is missing.");
+        }
+
+        await _authService.Logout(token, ct);
+
+        return NoContent();
+    }
 
 
 }

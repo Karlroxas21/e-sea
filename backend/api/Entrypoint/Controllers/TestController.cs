@@ -4,13 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 namespace Entrypoint.Controllers;
 
 [ApiController]
-[Route("v1/api")]
-public class TestController : ControllerBase
+[Route("v1/api/documents")]
+public class MiscController : ControllerBase
 {
-    [AllowAnonymous]
-    [HttpGet]
-    public async Task<IActionResult> GetTest()
+    [Authorize]
+    [HttpGet("pending")]
+    public async Task<IActionResult> GetPendingDocuments()
     {
-        return Ok();
+        int pending = 5;
+        return Ok(new { pending = pending });
+    }
+
+    [Authorize]
+    [HttpGet("open-jobs")]
+    public async Task<IActionResult> GetOpenJobPosts()
+    {
+        int open = 12;
+        return Ok(new { open = open });
     }
 }

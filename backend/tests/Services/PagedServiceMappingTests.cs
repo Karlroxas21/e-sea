@@ -47,7 +47,7 @@ public class PagedServiceMappingTests
         repo.Setup(r => r.GetAllAsync(1, 10, Query, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new PagedResult<ComplianceAndRequirements>(new[] { entity }, 1, 10, 1));
 
-        var sut = new ComplianceAndRequirementsService(repo.Object);
+        var sut = new ComplianceAndRequirementsService(repo.Object, new Mock<IUserContext>().Object);
 
         var result = await sut.GetAllAsync(1, 10, Query);
 

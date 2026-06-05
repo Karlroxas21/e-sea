@@ -48,4 +48,19 @@ public class TrainingRepository : ITrainingRepository
             _ => desc ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
         };
     }
+
+    public async Task<(int Completed, int Pending, int Scheduled)> GetTrainingStats(Guid UserId, CancellationToken ct = default)
+    {
+        var stats = await _db.Trainings
+            .Where(t => t.DeletedAt == null && t.UserId == UserId)
+            .GroupBy(t => t.Status)
+            .Select(g => new { Status = g.Key, Count = g.Count() })
+            .ToListAsync(ct);
+
+        return (
+            stats.FirstOrDefault(s => s.Status == "Completed")?.Count ?? 0,
+            stats.FirstOrDefault(s => s.Status == "Pending")?.Count ?? 0,
+            stats.FirstOrDefault(s => s.Status == "Scheduled")?.Count ?? 0
+        );
+    }
 }
