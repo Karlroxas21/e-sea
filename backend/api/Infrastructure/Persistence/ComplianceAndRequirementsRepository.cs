@@ -49,16 +49,25 @@ public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRep
         };
     }
 
-    public async Task<int> GetComplianceScore(Guid UserId, CancellationToken ct = default)
+    public async Task<ComplianceScoreResult> GetComplianceScore(Guid UserId, CancellationToken ct = default)
     {
-        var total = await _db.ComplianceAndRequirements
-            .CountAsync(c => c.DeletedAt == null && c.UserId == UserId, ct);
+        var records = await _db.ComplianceAndRequirements
+            .Where(c => c.DeletedAt == null && c.UserId == UserId)
+            .ToListAsync(ct);
 
-        if (total == 0) return 100;
+        if (records.Count == 0)
+            return new ComplianceScoreResult(100, 0, 0);
 
-        var validCount = await _db.ComplianceAndRequirements
-            .CountAsync(c => c.DeletedAt == null && c.UserId == UserId && c.Status == "Valid", ct);
+        var validCount = records.Count(c => c.Status == "Valid" || c.Status == "Signed");
+        var missingCount = records.Count(c => c.Status == "Missing");
+        var expiredExpiringSoonPendingCount = records.Count(c =>
+            c.Status == "Expired" ||
+            c.Status == "Expiring Soon" ||
+            c.Status == "Pending" ||
+            c.Status == "Pending Review");
 
-        return (validCount * 100) / total;
+        var score = (validCount * 100) / records.Count;
+
+        return new ComplianceScoreResult(score, missingCount, expiredExpiringSoonPendingCount);
     }
 }

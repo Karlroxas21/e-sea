@@ -30,9 +30,15 @@ public class ComplianceAndRequirementsService : IComplianceAndRequirementsServic
 
     public async Task<ComplianceScoreResponse> GetComplianceScoreAsync(CancellationToken ct = default)
     {
-        int score = await _complianceAndRequirementsRepository.GetComplianceScore(_userContext.UserId, ct);
+        var result = await _complianceAndRequirementsRepository.GetComplianceScore(_userContext.UserId, ct);
 
-        return new ComplianceScoreResponse(score);
+        return new ComplianceScoreResponse(
+            result.Score,
+            new ComplianceScoreDetails(
+                result.MissingCount,
+                result.ExpiredExpiringSoonPendingCount
+            )
+        );
     }
 
 }

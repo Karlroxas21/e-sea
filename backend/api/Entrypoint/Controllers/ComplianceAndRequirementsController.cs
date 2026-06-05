@@ -37,3 +37,4 @@ public class ComplianceAndRequirementsController : ControllerBase
         return Ok(score);
     }
 }
+
