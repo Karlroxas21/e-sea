@@ -1,4 +1,5 @@
 using Domain.ValueObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Ports;
 
@@ -15,6 +16,7 @@ public class TrainingController : ControllerBase
         _trainingService = trainingService;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] int page = 1,

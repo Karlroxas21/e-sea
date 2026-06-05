@@ -20,8 +20,10 @@ public class TrainingRepository : ITrainingRepository
 
     public async Task<PagedResult<Trainings>> GetAllAsync(int Page, int PageSize, BaseQuery query, CancellationToken ct = default)
     {
+        var userId = _userContext.UserId;
+
         var q = _db.Trainings
-            .Where(c => c.DeletedAt == null && c.UserId == _userContext.UserId);
+            .Where(c => c.DeletedAt == null && c.UserId == userId);
 
         q = ApplySort(q, query.Sort, query.Order);
 

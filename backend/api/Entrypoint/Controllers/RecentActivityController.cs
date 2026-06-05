@@ -1,4 +1,5 @@
 using Domain.ValueObjects;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Ports;
 
@@ -15,6 +16,7 @@ public class RecentActivityController : ControllerBase
         _recentActivityFeedService = recentActivityFeedService;
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] int page = 1,

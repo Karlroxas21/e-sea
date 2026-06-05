@@ -20,8 +20,10 @@ public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRep
 
     public async Task<PagedResult<ComplianceAndRequirements>> GetAllAsync(int Page, int PageSize, BaseQuery query, CancellationToken ct = default)
     {
+        var userId = _userContext.UserId;
+
         var q = _db.ComplianceAndRequirements
-            .Where(c => c.DeletedAt == null && c.UserId == _userContext.UserId);
+            .Where(c => c.DeletedAt == null && c.UserId == userId);
 
         q = ApplySort(q, query.Sort, query.Order);
 

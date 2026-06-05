@@ -18,7 +18,9 @@ public class UserContext : IUserContext
     {
         get
         {
-            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var user = _httpContextAccessor.HttpContext?.User;
+            var userIdClaim = user?.FindFirstValue(JwtRegisteredClaimNames.Sub)
+                           ?? user?.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userIdClaim))
             {
