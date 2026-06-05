@@ -48,4 +48,17 @@ public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRep
             _ => desc ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
         };
     }
+
+    public async Task<int> GetComplianceScore(Guid UserId, CancellationToken ct = default)
+    {
+        var total = await _db.ComplianceAndRequirements
+            .CountAsync(c => c.DeletedAt == null && c.UserId == UserId, ct);
+
+        if (total == 0) return 100;
+
+        var validCount = await _db.ComplianceAndRequirements
+            .CountAsync(c => c.DeletedAt == null && c.UserId == UserId && c.Status == "Valid", ct);
+
+        return (validCount * 100) / total;
+    }
 }

@@ -128,4 +128,37 @@ public class ComplianceAndRequirementsRepositoryTests
 
         Assert.Equal(new[] { "oldest", "middle", "newest" }, result.Items.Select(c => c.DocumentName));
     }
+
+    [Fact]
+    public async Task GetComplianceScore_ReturnsCorrectPercentage()
+    {
+        var userId = Guid.NewGuid();
+        using var db = TestDbContextFactory.Create();
+        db.ComplianceAndRequirements.AddRange(
+            TestEntityFactory.Compliance(userId, status: "Valid"),
+            TestEntityFactory.Compliance(userId, status: "Valid"),
+            TestEntityFactory.Compliance(userId, status: "Expired"),
+            TestEntityFactory.Compliance(userId, status: "Missing")
+        );
+        await db.SaveChangesAsync();
+
+        var repo = new ComplianceAndRequirementsRepository(db, new StubUserContext(userId));
+
+        var score = await repo.GetComplianceScore(userId);
+
+        // 2 Valid out of 4 total = 50%
+        Assert.Equal(50, score);
+    }
+
+    [Fact]
+    public async Task GetComplianceScore_Returns100_WhenNoRecordsExist()
+    {
+        var userId = Guid.NewGuid();
+        using var db = TestDbContextFactory.Create();
+        var repo = new ComplianceAndRequirementsRepository(db, new StubUserContext(userId));
+
+        var score = await repo.GetComplianceScore(userId);
+
+        Assert.Equal(100, score);
+    }
 }

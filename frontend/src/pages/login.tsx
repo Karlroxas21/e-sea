@@ -29,7 +29,7 @@ export default function LoginPage() {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/login`,
+        `${API_BASE_URL}/api/auth/login`,
         { email, password },
         {
           headers: {
