@@ -1,3 +1,5 @@
+using Domain.Ports;
+using Infrastructure.Jwt;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +12,22 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContext, UserContext>();
+
         services.AddDbContext<ESeaDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("Default")));
+
+        // JWT
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+        services.AddScoped<IJwtProvider, JwtProvider>();
+
+        // Repositories
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IComplianceAndRequirementsRepository, ComplianceAndRequirementsRepository>();
+        services.AddScoped<INewsRepository, NewsRepository>();
+        services.AddScoped<IRecentActivityRepository, RecentActivityRepository>();
+        services.AddScoped<ITrainingRepository, TrainingRepository>();
 
         return services;
     }

@@ -1,0 +1,93 @@
+-- Seed data for User: 85BBE6FE-0A74-41B6-2737-08DEC217649B
+
+-- News Data (20 records)
+INSERT INTO [News] ([Id], [Category], [Title], [PublishDate], [ReadTimeMinutes], [ThumbnailUrl], [ContentUrl], [CreatedAt]) VALUES
+(NEWID(), 'Safety', 'New Safety Regulations for 2026', '2026-01-15', 5, 'https://picsum.photos/seed/news1/400/300', 'https://example.com/news/safety-2026', GETDATE()),
+(NEWID(), 'Company', 'Q1 Fleet Performance Report', '2026-03-10', 8, 'https://picsum.photos/seed/news2/400/300', 'https://example.com/news/fleet-q1', GETDATE()),
+(NEWID(), 'Industry', 'Global Shipping Trends in 2026', '2026-02-20', 10, 'https://picsum.photos/seed/news3/400/300', 'https://example.com/news/shipping-trends', GETDATE()),
+(NEWID(), 'Training', 'Mandatory Cybersecurity Training for All Crew', '2026-04-05', 4, 'https://picsum.photos/seed/news4/400/300', 'https://example.com/news/cybersecurity', GETDATE()),
+(NEWID(), 'Sustainability', 'Switching to Green Methanol: Our Progress', '2026-05-12', 12, 'https://picsum.photos/seed/news5/400/300', 'https://example.com/news/green-methanol', GETDATE()),
+(NEWID(), 'Safety', 'Lessons Learned from Recent Port Incidents', '2026-05-28', 6, 'https://picsum.photos/seed/news6/400/300', 'https://example.com/news/port-incidents', GETDATE()),
+(NEWID(), 'Welfare', 'Mental Health Support Programs for Seafarers', '2026-01-30', 7, 'https://picsum.photos/seed/news7/400/300', 'https://example.com/news/mental-health', GETDATE()),
+(NEWID(), 'Innovation', 'AI-Driven Route Optimization Now Live', '2026-04-18', 9, 'https://picsum.photos/seed/news8/400/300', 'https://example.com/news/ai-route', GETDATE()),
+(NEWID(), 'Compliance', 'Updated MARPOL Annex VI Requirements', '2026-03-25', 15, 'https://picsum.photos/seed/news9/400/300', 'https://example.com/news/marpol-update', GETDATE()),
+(NEWID(), 'Company', 'New Vessel Addition: The MV Blue Horizon', '2026-05-02', 4, 'https://picsum.photos/seed/news10/400/300', 'https://example.com/news/new-vessel', GETDATE()),
+(NEWID(), 'Industry', 'Canal Expansion Projects Update', '2026-02-14', 11, 'https://picsum.photos/seed/news11/400/300', 'https://example.com/news/canal-expansion', GETDATE()),
+(NEWID(), 'Safety', 'Fire Drills: Best Practices for 2026', '2026-04-30', 5, 'https://picsum.photos/seed/news12/400/300', 'https://example.com/news/fire-drills', GETDATE()),
+(NEWID(), 'Welfare', 'Celebrating Day of the Seafarer 2026', '2026-06-01', 3, 'https://picsum.photos/seed/news13/400/300', 'https://example.com/news/seafarer-day', GETDATE()),
+(NEWID(), 'Innovation', 'Smart Port Logistics Integration', '2026-03-05', 7, 'https://picsum.photos/seed/news14/400/300', 'https://example.com/news/smart-port', GETDATE()),
+(NEWID(), 'Compliance', 'New IMO Guidelines on Hull Fouling', '2026-05-15', 13, 'https://picsum.photos/seed/news15/400/300', 'https://example.com/news/hull-fouling', GETDATE()),
+(NEWID(), 'Sustainability', 'Solar Panel Installation on Dry Bulk Carriers', '2026-01-10', 8, 'https://picsum.photos/seed/news16/400/300', 'https://example.com/news/solar-bulk', GETDATE()),
+(NEWID(), 'Safety', 'Cold Weather Operations Protocol', '2025-12-15', 6, 'https://picsum.photos/seed/news17/400/300', 'https://example.com/news/cold-weather', GETDATE()),
+(NEWID(), 'Training', 'Advanced Navigation Radar Course', '2026-02-28', 5, 'https://picsum.photos/seed/news18/400/300', 'https://example.com/news/radar-course', GETDATE()),
+(NEWID(), 'Company', 'Annual Crew Conference Highlights', '2026-04-22', 9, 'https://picsum.photos/seed/news19/400/300', 'https://example.com/news/crew-conf', GETDATE()),
+(NEWID(), 'Industry', 'Post-Pandemic Logistics: 5 Years Later', '2026-05-20', 14, 'https://picsum.photos/seed/news20/400/300', 'https://example.com/news/logistics-5yrs', GETDATE());
+
+-- ComplianceAndRequirements Data (20 records)
+INSERT INTO [ComplianceAndRequirements] ([Id], [DocumentName], [Status], [ExpiryDate], [IsRequired], [UserId], [CreatedAt]) VALUES
+(NEWID(), 'Passport', 'Valid', '2030-05-20', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Seaman''s Book', 'Valid', '2028-11-15', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Medical Fitness Certificate (ENG1)', 'Expiring Soon', '2026-07-15', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'STCW Basic Safety Training', 'Valid', '2029-01-10', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Advanced Fire Fighting', 'Valid', '2028-03-25', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Survival Craft and Rescue Boats', 'Valid', '2029-06-05', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Security Awareness Training', 'Valid', NULL, 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Yellow Fever Vaccination', 'Valid', '2035-12-31', 0, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Drug & Alcohol Policy Agreement', 'Signed', NULL, 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Code of Conduct Acknowledgement', 'Signed', NULL, 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'GMDSS General Operator''s Certificate', 'Valid', '2031-08-14', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'ECDIS Type Specific Training', 'Valid', NULL, 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'US C1/D Visa', 'Valid', '2032-10-10', 0, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Schengen Visa', 'Expired', '2026-05-01', 0, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Bridge Resource Management', 'Valid', '2029-04-12', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Oil Tanker Familiarization', 'Valid', '2028-09-30', 0, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Gas Tanker Familiarization', 'Missing', NULL, 0, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Leadership and Management Skills', 'Valid', NULL, 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Cyber Security Level 1', 'Valid', '2027-02-15', 1, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'High Voltage Training', 'Pending Review', NULL, 0, '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE());
+
+-- RecentActivityFeeds Data (20 records)
+INSERT INTO [RecentActivityFeeds] ([Id], [ActivityType], [Title], [Description], [UserId], [CreatedAt]) VALUES
+(NEWID(), 'Login', 'System Login', 'User logged into the portal from Singapore Office IP', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(hour, -2, GETDATE())),
+(NEWID(), 'Document', 'Passport Updated', 'User uploaded a new scan of their passport', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -1, GETDATE())),
+(NEWID(), 'Training', 'Training Completed', 'Seafarer completed the Mandatory Cybersecurity course', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -3, GETDATE())),
+(NEWID(), 'Profile', 'Address Changed', 'User updated their home address in the profile section', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -5, GETDATE())),
+(NEWID(), 'Notification', 'Vessel Assignment', 'New assignment to MV Blue Horizon confirmed', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -7, GETDATE())),
+(NEWID(), 'Compliance', 'Medical Expiring', 'System alert: ENG1 Medical Certificate expiring in 30 days', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -10, GETDATE())),
+(NEWID(), 'Document', 'Schengen Visa Expired', 'Automatic status update: Schengen Visa has expired', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -12, GETDATE())),
+(NEWID(), 'Training', 'Course Scheduled', 'Advanced Navigation Radar course scheduled for next month', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -15, GETDATE())),
+(NEWID(), 'Login', 'System Login', 'User logged into the portal via mobile app', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -16, GETDATE())),
+(NEWID(), 'Profile', 'Email Verified', 'User successfully verified their new secondary email address', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -20, GETDATE())),
+(NEWID(), 'Document', 'Seaman''s Book Verified', 'Admin verified the uploaded Seaman''s Book pages', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(day, -25, GETDATE())),
+(NEWID(), 'Compliance', 'Compliance Score Increased', 'Score improved to 95% after document verification', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -1, GETDATE())),
+(NEWID(), 'Notification', 'Flight Ticket Issued', 'Flight ticket for next assignment sent to user email', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -1, DATEADD(day, -5, GETDATE()))),
+(NEWID(), 'Training', 'Training Reminder', 'Reminder sent for upcoming Bridge Resource Management course', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -1, DATEADD(day, -10, GETDATE()))),
+(NEWID(), 'Profile', 'Password Changed', 'User updated their portal password', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -2, GETDATE())),
+(NEWID(), 'Login', 'Login Attempt Blocked', 'Unusual login attempt from Unknown IP blocked for security', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -2, DATEADD(day, -15, GETDATE()))),
+(NEWID(), 'Document', 'Yellow Fever Update', 'User added new vaccination details', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -3, GETDATE())),
+(NEWID(), 'Compliance', 'Audit Completed', 'Annual seafarer compliance audit passed successfully', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -3, DATEADD(day, -20, GETDATE()))),
+(NEWID(), 'Notification', 'Leave Request Approved', 'Request for shore leave in October approved', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -4, GETDATE())),
+(NEWID(), 'Training', 'Certificate Issued', 'STCW Basic Safety Training certificate issued digitally', '85BBE6FE-0A74-41B6-2737-08DEC217649B', DATEADD(month, -4, DATEADD(day, -10, GETDATE())));
+
+-- Trainings Data (20 records)
+INSERT INTO [Trainings] ([Id], [Title], [ProviderOrLocation], [Status], [ScheduleDate], [UserId], [CreatedAt]) VALUES
+(NEWID(), 'Mandatory Cybersecurity Training', 'E-Learning Portal', 'Completed', DATEADD(day, -3, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Advanced Navigation Radar', 'Maritime Academy Singapore', 'Scheduled', '2026-07-20 09:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Bridge Resource Management', 'SimTech Center', 'Pending', '2026-08-15 08:30:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Engine Room Resource Management', 'SimTech Center', 'Scheduled', '2026-09-05 13:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'First Aid at Sea - Refresher', 'Red Cross Training Hub', 'Completed', DATEADD(month, -2, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Environmental Compliance (MARPOL)', 'E-Learning Portal', 'Completed', DATEADD(month, -4, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Crisis Management & Human Behavior', 'Global Maritime Institute', 'Scheduled', '2026-10-12 10:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'High Voltage Safety (Operational)', 'Tech Marine Training', 'Pending', '2026-11-01 09:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Advanced Liquefied Gas Tanker Ops', 'Training Center Rotterdam', 'Scheduled', '2027-01-20 08:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Security Officer Training (SSO)', 'Maritime Safety Center', 'Completed', DATEADD(month, -6, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Ballast Water Management System Ops', 'On-board Training', 'Completed', DATEADD(day, -15, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Electronic Chart Display (ECDIS)', 'E-Learning Portal', 'Completed', DATEADD(year, -1, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Polar Code Training (Basic)', 'Arctic Maritime Center', 'Scheduled', '2027-02-15 09:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'GMDSS Radio Operator Course', 'National Radio Institute', 'Completed', DATEADD(year, -2, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Dangerous Goods (IMDG Code)', 'E-Learning Portal', 'Scheduled', '2026-06-25 14:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Fast Rescue Boat Handling', 'Port Authority Training Base', 'Pending', '2026-12-05 10:30:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Leadership and Teamwork', 'Management Development Inst', 'Completed', DATEADD(month, -8, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Personal Safety & Social Responsibility', 'Academy of Sea', 'Completed', DATEADD(year, -3, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Deck Watchkeeping Familiarization', 'On-board Training', 'Completed', DATEADD(month, -1, GETDATE()), '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE()),
+(NEWID(), 'Cargo Handling and Stowage', 'Maritime Institute', 'Scheduled', '2026-08-30 09:00:00', '85BBE6FE-0A74-41B6-2737-08DEC217649B', GETDATE());

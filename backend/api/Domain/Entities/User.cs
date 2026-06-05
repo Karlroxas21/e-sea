@@ -25,4 +25,33 @@ public class User : Base
     public ICollection<ComplianceAndRequirements> ComplianceAndRequirements { get; private set; } = [];
 
     public ICollection<RecentActivityFeed> RecentActivityFeeds { get; private set; } = [];
+
+    public static User Create(
+        string email,
+        string password,
+        string fullName,
+        int complianceScore = 0,
+        string currentStatus = "not started",
+        string assignedVessel = null,
+        string jobTitle = ""
+    )
+    {
+        var User = new User();
+
+        User.Email = email;
+        User.Password = password;
+        User.FullName = fullName;
+        User.ComplianceScore = complianceScore;
+        User.CurrentStatus = currentStatus;
+        User.AssignedVessel = assignedVessel;
+        User.JobTitle = jobTitle;
+        User.CreatedAt = DateTime.Now;
+
+        return User;
+    }
+    public void UpdatePassword(string newPasword)
+    {
+        Password = newPasword;
+    }
+
 }
