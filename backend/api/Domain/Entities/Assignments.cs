@@ -16,7 +16,6 @@ public class Assignments : Base
     public User User { get; private set; }
     public Vessles Vessel { get; private set; }
     public Positions Position { get; private set; }
-    public ICollection<AssignmentRequirement> Requirements { get; private set; } = [];
 
     public void UpdateStatusFromCompliance()
     {

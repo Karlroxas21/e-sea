@@ -15,7 +15,6 @@ public class ESeaDbContext(DbContextOptions<ESeaDbContext> options) : DbContext(
     public DbSet<Vessles> Vessels => Set<Vessles>();
     public DbSet<Positions> Positions => Set<Positions>();
     public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
-    public DbSet<AssignmentRequirement> AssignmentRequirements => Set<AssignmentRequirement>();
     public DbSet<VesselRequirement> VesselRequirements => Set<VesselRequirement>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

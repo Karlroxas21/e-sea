@@ -4,7 +4,6 @@
 DECLARE @UserId UNIQUEIDENTIFIER = '7328967C-C97D-42E0-A8FA-08DEC2DE20CE';
 
 -- Clean up existing data
-DELETE FROM [AssignmentRequirements];
 DELETE FROM [Assignments];
 DELETE FROM [Trainings];
 DELETE FROM [RecentActivityFeeds];
@@ -132,18 +131,7 @@ INSERT INTO [Assignments] ([Id], [UserId], [VesselId], [PositionId], [IsPrimaryP
 (@A19, @UserId, @V19, @PosCaptain, 1, '2029-01-05', '2029-05-10', 'Rotterdam', 'Genoa', 'upcoming', 125, GETDATE()),
 (@A20, @UserId, @V20, @PosCaptain, 1, '2029-07-01', '2029-11-05', 'Genoa', 'Singapore', 'upcoming', 127, GETDATE());
 
--- 6. Insert Assignment Requirements (Linking some assignments to mandatory documents)
-DELETE FROM [AssignmentRequirements];
-INSERT INTO [AssignmentRequirements] ([AssignmentId], [DocumentTypeId], [CreatedAt]) VALUES
-(@A14, @DocPassport, GETDATE()),
-(@A14, @DocSeamansBook, GETDATE()),
-(@A14, @DocMedical, GETDATE()),
-(@A14, @DocSTCW, GETDATE()),
-(@A15, @DocPassport, GETDATE()),
-(@A15, @DocSeamansBook, GETDATE()),
-(@A15, @DocMedical, GETDATE());
-
--- 6.1. Insert Vessel Requirements
+-- 6. Insert Vessel Requirements
 DELETE FROM [VesselRequirements];
 INSERT INTO [VesselRequirements] ([VesselId], [DocumentTypeId], [CreatedAt]) VALUES
 (@V1, @DocPassport, GETDATE()),
