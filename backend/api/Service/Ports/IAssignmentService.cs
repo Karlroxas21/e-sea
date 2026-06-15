@@ -7,5 +7,5 @@ namespace Service.Ports;
 public interface IAssignmentService
 {
     Task<PagedAssignmentResult<Assignments>> GetAllAsync(int Page, int PageSize, Status? status, BaseQuery? query, CancellationToken ct);
-
+    Task RefreshAssignmentStatusesAsync(CancellationToken ct);
 }

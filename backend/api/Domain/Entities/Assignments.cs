@@ -18,4 +18,46 @@ public class Assignments : Base
     public Positions Position { get; private set; }
     public ICollection<AssignmentRequirement> Requirements { get; private set; } = [];
 
+    public void UpdateStatusFromCompliance()
+    {
+        if (Vessel == null || User == null) return;
+
+        var vesselRequirements = Vessel.VesselRequirements.Select(vr => vr.DocumentTypeId).ToList();
+        var userDocuments = User.ComplianceAndRequirements;
+
+        bool allMet = true;
+        bool actionNeeded = false;
+
+        foreach (var reqDocTypeId in vesselRequirements)
+        {
+            var userDoc = userDocuments.FirstOrDefault(ud => ud.DocumentTypeId == reqDocTypeId);
+            if (userDoc == null)
+            {
+                allMet = false;
+                actionNeeded = true;
+                break;
+            }
+
+            if (userDoc.Status == "Pending Review" || userDoc.Status == "Expired")
+            {
+                actionNeeded = true;
+                break;
+            }
+
+            if (userDoc.ExpiryDate.HasValue && userDoc.ExpiryDate.Value <= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)))
+            {
+                actionNeeded = true;
+                break;
+            }
+        }
+
+        if (actionNeeded)
+        {
+            Status = "Action Needed";
+        }
+        else if (allMet && vesselRequirements.Count > 0)
+        {
+            Status = "Scheduled";
+        }
+    }
 }

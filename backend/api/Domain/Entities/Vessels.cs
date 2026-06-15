@@ -6,4 +6,5 @@ public class Vessles : Base
     public string ImoNumber { get; private set; }
     public string Name { get; private set; }
     public string Type { get; private set; }
+    public ICollection<VesselRequirement> VesselRequirements { get; private set; } = [];
 }

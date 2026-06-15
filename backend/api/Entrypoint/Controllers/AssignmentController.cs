@@ -30,4 +30,12 @@ public class AssignmentController : ControllerBase
 
         return Ok(data);
     }
+
+    [Authorize]
+    [HttpPost("sync-compliance")]
+    public async Task<IActionResult> SyncCompliance(CancellationToken ct)
+    {
+        await _assignmentService.RefreshAssignmentStatusesAsync(ct);
+        return NoContent();
+    }
 }

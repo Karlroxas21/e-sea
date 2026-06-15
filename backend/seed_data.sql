@@ -125,14 +125,15 @@ INSERT INTO [Assignments] ([Id], [UserId], [VesselId], [PositionId], [IsPrimaryP
 (@A12, @UserId, @V12, @PosChiefOfficer, 1, '2025-07-01', '2025-11-05', 'Hamburg', 'Colombo', 'completed', 127, GETDATE()),
 (@A13, @UserId, @V13, @PosCaptain, 1, '2026-01-15', '2026-05-20', 'Colombo', 'Singapore', 'completed', 125, GETDATE()),
 (@A14, @UserId, @V14, @PosCaptain, 1, '2026-06-15', '2026-10-20', 'Singapore', 'Yokohama', 'currently-onboard', 127, GETDATE()),
-(@A15, @UserId, @V15, @PosCaptain, 1, '2027-01-10', '2027-05-15', 'Yokohama', 'Los Angeles', 'upcoming', 125, GETDATE()),
-(@A16, @UserId, @V16, @PosCaptain, 1, '2027-07-05', '2027-11-10', 'Los Angeles', 'Singapore', 'upcoming', 128, GETDATE()),
+(@A15, @UserId, @V15, @PosCaptain, 1, '2027-01-10', '2027-05-15', 'Yokohama', 'Los Angeles', 'Scheduled', 125, GETDATE()),
+(@A16, @UserId, @V16, @PosCaptain, 1, '2027-07-05', '2027-11-10', 'Los Angeles', 'Singapore', 'Action Needed', 128, GETDATE()),
 (@A17, @UserId, @V17, @PosCaptain, 1, '2028-01-15', '2028-05-20', 'Singapore', 'Dubai', 'upcoming', 126, GETDATE()),
 (@A18, @UserId, @V18, @PosCaptain, 1, '2028-07-10', '2028-11-15', 'Dubai', 'Rotterdam', 'upcoming', 128, GETDATE()),
 (@A19, @UserId, @V19, @PosCaptain, 1, '2029-01-05', '2029-05-10', 'Rotterdam', 'Genoa', 'upcoming', 125, GETDATE()),
 (@A20, @UserId, @V20, @PosCaptain, 1, '2029-07-01', '2029-11-05', 'Genoa', 'Singapore', 'upcoming', 127, GETDATE());
 
 -- 6. Insert Assignment Requirements (Linking some assignments to mandatory documents)
+DELETE FROM [AssignmentRequirements];
 INSERT INTO [AssignmentRequirements] ([AssignmentId], [DocumentTypeId], [CreatedAt]) VALUES
 (@A14, @DocPassport, GETDATE()),
 (@A14, @DocSeamansBook, GETDATE()),
@@ -141,6 +142,24 @@ INSERT INTO [AssignmentRequirements] ([AssignmentId], [DocumentTypeId], [Created
 (@A15, @DocPassport, GETDATE()),
 (@A15, @DocSeamansBook, GETDATE()),
 (@A15, @DocMedical, GETDATE());
+
+-- 6.1. Insert Vessel Requirements
+DELETE FROM [VesselRequirements];
+INSERT INTO [VesselRequirements] ([VesselId], [DocumentTypeId], [CreatedAt]) VALUES
+(@V1, @DocPassport, GETDATE()),
+(@V1, @DocSeamansBook, GETDATE()),
+(@V1, @DocMedical, GETDATE()),
+(@V1, @DocSTCW, GETDATE()),
+(@V14, @DocPassport, GETDATE()),
+(@V14, @DocSeamansBook, GETDATE()),
+(@V14, @DocMedical, GETDATE()),
+(@V14, @DocSTCW, GETDATE()),
+(@V15, @DocPassport, GETDATE()),
+(@V15, @DocSeamansBook, GETDATE()),
+(@V15, @DocMedical, GETDATE()),
+(@V16, @DocPassport, GETDATE()),
+(@V16, @DocSeamansBook, GETDATE()),
+(@V16, @DocMedical, GETDATE());
 
 -- 7. News Data
 INSERT INTO [News] ([Id], [Category], [Title], [PublishDate], [ReadTimeMinutes], [ThumbnailUrl], [ContentUrl], [CreatedAt]) VALUES
