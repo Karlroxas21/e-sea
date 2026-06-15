@@ -2,13 +2,13 @@ using Domain.Ports;
 
 namespace Infrastructure.Persistence;
 
-public class VesselsRepository
+public class VesselsRepository : IVesselsRepository
 {
-    // private readonly ESeaDbContext _db;
+    private readonly ESeaDbContext _db;
 
-    // public VesselsRepository(ESeaDbContext db, IUserContext userContext)
-    // {
-    //     _db = db;
-    // }
+    public VesselsRepository(ESeaDbContext db, IUserContext userContext)
+    {
+        _db = db;
+    }
 
 }
