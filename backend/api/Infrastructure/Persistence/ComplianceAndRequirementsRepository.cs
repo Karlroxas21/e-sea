@@ -59,12 +59,8 @@ public class ComplianceAndRequirementsRepository : IComplianceAndRequirementsRep
             return new ComplianceScoreResult(100, 0, 0);
 
         var validCount = records.Count(c => c.Status == "Valid" || c.Status == "Signed");
-        var missingCount = records.Count(c => c.Status == "Missing");
-        var expiredExpiringSoonPendingCount = records.Count(c =>
-            c.Status == "Expired" ||
-            c.Status == "Expiring Soon" ||
-            c.Status == "Pending" ||
-            c.Status == "Pending Review");
+        var missingCount = records.Count(c => c.Status == "Pending Review");
+        var expiredExpiringSoonPendingCount = records.Count(c => c.Status == "Expiring Soon");
 
         var score = (validCount * 100) / records.Count;
 

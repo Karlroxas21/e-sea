@@ -34,6 +34,14 @@ public class ComplianceAndRequirementsController : ControllerBase
     public async Task<IActionResult> GetComplianceScore(CancellationToken ct = default)
     {
         var score = await _complianceAndRequirementsService.GetComplianceScoreAsync(ct);
+        // ComplianceScoreDetails test1 = new ComplianceScoreDetails(
+        //     20,
+        //     20
+        // );
+        // ComplianceScoreResponse test = new ComplianceScoreResponse(
+        //     60,
+        // test1
+        // );
         return Ok(score);
     }
 }
