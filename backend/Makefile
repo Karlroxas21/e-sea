@@ -36,3 +36,5 @@ migration:
 
 migrate:
 	dotnet ef database update --project api/Infrastructure --startup-project $(ENTRYPOINT)
+	
+

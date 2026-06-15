@@ -27,5 +27,10 @@ public class ComplianceAndRequirementsConfiguration : IEntityTypeConfiguration<C
             .WithMany(u => u.ComplianceAndRequirements)
             .HasForeignKey(c => c.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(c => c.DocumentType)
+            .WithMany()
+            .HasForeignKey(c => c.DocumentTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
