@@ -32,13 +32,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(u => u.AssignedVessel)
-            .HasMaxLength(150);
-
-        builder.Property(u => u.JobTitle)
-            .IsRequired()
-            .HasMaxLength(100);
-
         builder.Property(u => u.NextAssignmentDate);
     }
 }

@@ -66,7 +66,7 @@ public class PagedServiceMappingTests
         repo.Setup(r => r.GetAllAsync(1, 10, Query, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new PagedResult<Trainings>(new[] { entity }, 1, 10, 1));
 
-        var sut = new TrainingService(repo.Object);
+        var sut = new TrainingService(repo.Object, new Mock<IUserContext>().Object);
 
         var result = await sut.GetAllAsync(1, 10, Query);
 

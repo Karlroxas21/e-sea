@@ -15,7 +15,6 @@ public class UserEntityTests
         Assert.Equal("Sailor Sam", user.FullName);
         Assert.Equal(0, user.ComplianceScore);
         Assert.Equal("not started", user.CurrentStatus);
-        Assert.Equal(string.Empty, user.JobTitle);
         Assert.NotEqual(default, user.CreatedAt);
     }
 
