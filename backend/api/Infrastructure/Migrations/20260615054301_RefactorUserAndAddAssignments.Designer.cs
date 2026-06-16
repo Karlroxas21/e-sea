@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ESeaDbContext))]
-    partial class ESeaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615054301_RefactorUserAndAddAssignments")]
+    partial class RefactorUserAndAddAssignments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,9 +74,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid>("VesselId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Warning")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -133,9 +133,6 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid>("DocumentTypeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateOnly?>("ExpiryDate")
                         .HasColumnType("date");
 
@@ -155,41 +152,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentTypeId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("ComplianceAndRequirements");
-                });
-
-            modelBuilder.Entity("Domain.Entities.DocumentType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("Domain.Entities.News", b =>
@@ -394,30 +359,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entities.VesselRequirement", b =>
-                {
-                    b.Property<Guid>("VesselId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DocumentTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("VesselId", "DocumentTypeId");
-
-                    b.HasIndex("DocumentTypeId");
-
-                    b.ToTable("VesselRequirements");
-                });
-
             modelBuilder.Entity("Domain.Entities.Vessles", b =>
                 {
                     b.Property<Guid>("Id")
@@ -481,19 +422,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.ComplianceAndRequirements", b =>
                 {
-                    b.HasOne("Domain.Entities.DocumentType", "DocumentType")
-                        .WithMany()
-                        .HasForeignKey("DocumentTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("ComplianceAndRequirements")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("DocumentType");
 
                     b.Navigation("User");
                 });
@@ -520,25 +453,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entities.VesselRequirement", b =>
-                {
-                    b.HasOne("Domain.Entities.DocumentType", "DocumentType")
-                        .WithMany()
-                        .HasForeignKey("DocumentTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Vessles", "Vessel")
-                        .WithMany("VesselRequirements")
-                        .HasForeignKey("VesselId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DocumentType");
-
-                    b.Navigation("Vessel");
-                });
-
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Navigation("Assignments");
@@ -548,11 +462,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("RecentActivityFeeds");
 
                     b.Navigation("Trainings");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Vessles", b =>
-                {
-                    b.Navigation("VesselRequirements");
                 });
 #pragma warning restore 612, 618
         }

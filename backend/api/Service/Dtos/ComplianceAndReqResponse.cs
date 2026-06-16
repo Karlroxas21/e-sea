@@ -1,6 +1,8 @@
 using System.Net.NetworkInformation;
 using Domain.Entities;
 
+namespace Service.Dtos;
+
 public record ComplianceAndReqResponse(
     Guid Id,
     string DocumentName,

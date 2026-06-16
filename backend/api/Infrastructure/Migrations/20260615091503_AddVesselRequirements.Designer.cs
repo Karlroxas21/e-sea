@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ESeaDbContext))]
-    partial class ESeaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615091503_AddVesselRequirements")]
+    partial class AddVesselRequirements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,30 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Entities.AssignmentRequirement", b =>
+                {
+                    b.Property<Guid>("AssignmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DocumentTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AssignmentId", "DocumentTypeId");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.ToTable("AssignmentRequirements");
+                });
 
             modelBuilder.Entity("Domain.Entities.Assignments", b =>
                 {
@@ -71,9 +98,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<Guid>("VesselId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Warning")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -452,6 +476,25 @@ namespace Infrastructure.Migrations
                     b.ToTable("Vessels");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AssignmentRequirement", b =>
+                {
+                    b.HasOne("Domain.Entities.Assignments", "Assignment")
+                        .WithMany("Requirements")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.DocumentType", "DocumentType")
+                        .WithMany()
+                        .HasForeignKey("DocumentTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("DocumentType");
+                });
+
             modelBuilder.Entity("Domain.Entities.Assignments", b =>
                 {
                     b.HasOne("Domain.Entities.Positions", "Position")
@@ -537,6 +580,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("DocumentType");
 
                     b.Navigation("Vessel");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Assignments", b =>
+                {
+                    b.Navigation("Requirements");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
