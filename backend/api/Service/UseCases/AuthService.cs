@@ -12,23 +12,67 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IBlacklistedTokenRepository _blacklistedTokenRepository;
+    private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public AuthService(IUserRepository userRepository, IJwtProvider jwtProvider, IBlacklistedTokenRepository blacklistedTokenRepository)
+    public AuthService(
+        IUserRepository userRepository,
+        IJwtProvider jwtProvider,
+        IBlacklistedTokenRepository blacklistedTokenRepository,
+        IRefreshTokenRepository refreshTokenRepository)
     {
         _userRepository = userRepository;
         _jwtProvider = jwtProvider;
         _blacklistedTokenRepository = blacklistedTokenRepository;
+        _refreshTokenRepository = refreshTokenRepository;
     }
 
-    public async Task<UserResponse> Login(string email, string password, CancellationToken ct = default)
+    public async Task<AuthResponse> Login(string email, string password, CancellationToken ct = default)
     {
         await _userRepository.GetUserByEmail(email, ct);
 
         User user = await _userRepository.Login(email, password, ct);
 
         string jwt = _jwtProvider.GenerateToken(user);
+        string refreshToken = Guid.NewGuid().ToString();
 
-        return UserResponse.ToUserResponse(user, jwt);
+        await _refreshTokenRepository.RemoveByUserIdAsync(user.Id, ct);
+        await _refreshTokenRepository.AddAsync(new RefreshToken
+        {
+            Token = refreshToken,
+            UserId = user.Id,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow
+        }, ct);
+
+        return new AuthResponse(UserResponse.ToUserResponse(user, jwt), refreshToken);
+    }
+
+    public async Task<AuthResponse> Refresh(string refreshToken, CancellationToken ct = default)
+    {
+        var token = await _refreshTokenRepository.GetByTokenAsync(refreshToken, ct);
+
+        if (token == null || token.IsExpired)
+        {
+            if (token != null)
+            {
+                await _refreshTokenRepository.RemoveAsync(token, ct);
+            }
+            throw new UnauthorizedAccessException("Invalid or expired refresh token.");
+        }
+
+        string jwt = _jwtProvider.GenerateToken(token.User);
+        string newRefreshToken = Guid.NewGuid().ToString();
+
+        await _refreshTokenRepository.RemoveAsync(token, ct);
+        await _refreshTokenRepository.AddAsync(new RefreshToken
+        {
+            Token = newRefreshToken,
+            UserId = token.UserId,
+            ExpiresAt = DateTime.UtcNow.AddDays(7),
+            CreatedAt = DateTime.UtcNow
+        }, ct);
+
+        return new AuthResponse(UserResponse.ToUserResponse(token.User, jwt), newRefreshToken);
     }
 
     public async Task Register(UserRegister request, CancellationToken ct = default)
