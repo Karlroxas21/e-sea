@@ -16,7 +16,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
+              "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -175,6 +175,23 @@
         },
         {
           "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "const jwt = res.jwt;\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"jwt\", jwt);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -253,6 +270,52 @@
               "body": "{\n    \"id\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n    \"jwt\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWJiZTZmZS0wYTc0LTQxYjYtMjczNy0wOGRlYzIxNzY0OWIiLCJlbWFpbCI6ImttckBtZS1pY3QuY29tIiwibmFtZSI6IkthcmwgTWFyeCBSb3hhcyIsImV4cCI6MTc4MDU2NzQwMywiaXNzIjoiRVNlYUFwaSIsImF1ZCI6IkVTZWFGcm9udGVuZCJ9.-NubV6VdUxZ0h1SOH1jYGJmyHlvcyqVAgEqQlTkpBdA\",\n    \"email\": \"kmr@me-ict.com\",\n    \"fullName\": \"Karl Marx Roxas\",\n    \"complianceScore\": 0,\n    \"currentStatus\": \"not started\",\n    \"assignedVessel\": null,\n    \"jobTitle\": \"\",\n    \"nextAssignmentDate\": null\n}"
             }
           ]
+        },
+        {
+          "name": "Refresh",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "const jwt = res.jwt;\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"jwt\", jwt);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -288,8 +351,7 @@
             },
             {
               "key": "pageSize",
-              "value": "2",
-              "type": "text"
+              "value": "2"
             }
           ]
         }
@@ -807,6 +869,36 @@
             "api",
             "assignments",
             "sync-compliance"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Total Sea Time",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/assignments/sea-time",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "assignments",
+            "sea-time"
           ]
         }
       },
