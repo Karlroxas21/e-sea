@@ -34,7 +34,8 @@ public class AssignmentService : IAssignmentService
             result.All
         );
     }
-    public async Task RefreshAssignmentStatusesAsync(CancellationToken ct)
+
+    public async Task SyncAssignmentWarningAsync(CancellationToken ct)
     {
         var userId = _userContext.UserId;
         var upcomingAssignments = await _assignmentRepository.GetUpcomingAssignmentsAsync(userId, ct);
@@ -49,5 +50,10 @@ public class AssignmentService : IAssignmentService
             assignment.CheckCompliance();
             await _assignmentRepository.UpdateAsync(assignment, ct);
         }
+    }
+
+    public async Task<int> GetSeaTimeAcrossCompletedAssignments(CancellationToken ct)
+    {
+        return await _assignmentRepository.GetSeaTimeAcrossCompletedAssignments(ct);
     }
 }

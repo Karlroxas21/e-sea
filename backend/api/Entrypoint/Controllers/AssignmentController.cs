@@ -35,7 +35,17 @@ public class AssignmentController : ControllerBase
     [HttpPost("sync-compliance")]
     public async Task<IActionResult> SyncCompliance(CancellationToken ct)
     {
-        await _assignmentService.RefreshAssignmentStatusesAsync(ct);
+        await _assignmentService.SyncAssignmentWarningAsync(ct);
         return NoContent();
+    }
+
+    [Authorize]
+    [HttpGet("sea-time")]
+    public async Task<IActionResult> GetSeaTimeAcrossCompletedAssignments(
+       CancellationToken ct = default)
+    {
+        var num = await _assignmentService.GetSeaTimeAcrossCompletedAssignments(ct);
+
+        return Ok(new { totalSeaDays = num });
     }
 }
