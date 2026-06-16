@@ -98,4 +98,13 @@ public class AssignmentRepository : IAssignmentRepository
             _ => desc ? query.OrderByDescending(c => c.CreatedAt) : query.OrderBy(c => c.CreatedAt),
         };
     }
+
+    public async Task<int> GetSeaTimeAcrossCompletedAssignments(CancellationToken ct  )
+    {
+        int totalDays = await _db.Assignments
+            .Where(a => a.UserId == _userContext.UserId)
+            .SumAsync(a => EF.Functions.DateDiffDay(a.SignOnDate, a.SignOffDate));
+
+        return totalDays;
+    }
 }
