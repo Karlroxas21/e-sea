@@ -109,27 +109,27 @@ DECLARE @A13 UNIQUEIDENTIFIER = NEWID(); DECLARE @A14 UNIQUEIDENTIFIER = NEWID()
 DECLARE @A16 UNIQUEIDENTIFIER = NEWID(); DECLARE @A17 UNIQUEIDENTIFIER = NEWID(); DECLARE @A18 UNIQUEIDENTIFIER = NEWID();
 DECLARE @A19 UNIQUEIDENTIFIER = NEWID(); DECLARE @A20 UNIQUEIDENTIFIER = NEWID();
 
-INSERT INTO [Assignments] ([Id], [UserId], [VesselId], [PositionId], [IsPrimaryPosition], [SignOnDate], [SignOffDate], [SignOnPort], [SignOffPort], [Status], [DurationDays], [CreatedAt]) VALUES
-(@A1, @UserId, @V1, @PosThirdOfficer, 1, '2020-01-05', '2020-05-10', 'Singapore', 'Rotterdam', 'completed', 126, GETDATE()),
-(@A2, @UserId, @V2, @PosThirdOfficer, 1, '2020-07-15', '2020-11-20', 'Rotterdam', 'Busan', 'completed', 128, GETDATE()),
-(@A3, @UserId, @V3, @PosSecondOfficer, 1, '2021-02-10', '2021-06-15', 'Busan', 'Shanghai', 'completed', 125, GETDATE()),
-(@A4, @UserId, @V4, @PosSecondOfficer, 1, '2021-08-01', '2021-12-05', 'Shanghai', 'Singapore', 'completed', 126, GETDATE()),
-(@A5, @UserId, @V5, @PosSecondOfficer, 1, '2022-01-20', '2022-05-25', 'Singapore', 'Jebel Ali', 'completed', 125, GETDATE()),
-(@A6, @UserId, @V6, @PosChiefOfficer, 1, '2022-07-10', '2022-11-15', 'Jebel Ali', 'Hong Kong', 'completed', 128, GETDATE()),
-(@A7, @UserId, @V7, @PosChiefOfficer, 1, '2023-01-05', '2023-05-10', 'Hong Kong', 'Long Beach', 'completed', 125, GETDATE()),
-(@A8, @UserId, @V8, @PosChiefOfficer, 1, '2023-07-01', '2023-11-05', 'Long Beach', 'Antwerp', 'completed', 127, GETDATE()),
-(@A9, @UserId, @V9, @PosChiefOfficer, 1, '2024-01-15', '2024-05-20', 'Antwerp', 'Singapore', 'completed', 126, GETDATE()),
-(@A10, @UserId, @V10, @PosChiefOfficer, 1, '2024-07-10', '2024-11-15', 'Singapore', 'Port Klang', 'completed', 128, GETDATE()),
-(@A11, @UserId, @V11, @PosChiefOfficer, 1, '2025-01-05', '2025-05-10', 'Port Klang', 'Hamburg', 'completed', 125, GETDATE()),
-(@A12, @UserId, @V12, @PosChiefOfficer, 1, '2025-07-01', '2025-11-05', 'Hamburg', 'Colombo', 'completed', 127, GETDATE()),
-(@A13, @UserId, @V13, @PosCaptain, 1, '2026-01-15', '2026-05-20', 'Colombo', 'Singapore', 'completed', 125, GETDATE()),
-(@A14, @UserId, @V14, @PosCaptain, 1, '2026-06-15', '2026-10-20', 'Singapore', 'Yokohama', 'currently-onboard', 127, GETDATE()),
-(@A15, @UserId, @V15, @PosCaptain, 1, '2027-01-10', '2027-05-15', 'Yokohama', 'Los Angeles', 'Scheduled', 125, GETDATE()),
-(@A16, @UserId, @V16, @PosCaptain, 1, '2027-07-05', '2027-11-10', 'Los Angeles', 'Singapore', 'Action Needed', 128, GETDATE()),
-(@A17, @UserId, @V17, @PosCaptain, 1, '2028-01-15', '2028-05-20', 'Singapore', 'Dubai', 'upcoming', 126, GETDATE()),
-(@A18, @UserId, @V18, @PosCaptain, 1, '2028-07-10', '2028-11-15', 'Dubai', 'Rotterdam', 'upcoming', 128, GETDATE()),
-(@A19, @UserId, @V19, @PosCaptain, 1, '2029-01-05', '2029-05-10', 'Rotterdam', 'Genoa', 'upcoming', 125, GETDATE()),
-(@A20, @UserId, @V20, @PosCaptain, 1, '2029-07-01', '2029-11-05', 'Genoa', 'Singapore', 'upcoming', 127, GETDATE());
+INSERT INTO [Assignments] ([Id], [UserId], [VesselId], [PositionId], [IsPrimaryPosition], [SignOnDate], [SignOffDate], [SignOnPort], [SignOffPort], [Status], [Warning], [DurationDays], [CreatedAt]) VALUES
+(@A1, @UserId, @V1, @PosThirdOfficer, 1, '2020-01-05', '2020-05-10', 'Singapore', 'Rotterdam', 'completed', NULL, 126, GETDATE()),
+(@A2, @UserId, @V2, @PosThirdOfficer, 1, '2020-07-15', '2020-11-20', 'Rotterdam', 'Busan', 'completed', NULL, 128, GETDATE()),
+(@A3, @UserId, @V3, @PosSecondOfficer, 1, '2021-02-10', '2021-06-15', 'Busan', 'Shanghai', 'completed', NULL, 125, GETDATE()),
+(@A4, @UserId, @V4, @PosSecondOfficer, 1, '2021-08-01', '2021-12-05', 'Shanghai', 'Singapore', 'completed', NULL, 126, GETDATE()),
+(@A5, @UserId, @V5, @PosSecondOfficer, 1, '2022-01-20', '2022-05-25', 'Singapore', 'Jebel Ali', 'completed', NULL, 125, GETDATE()),
+(@A6, @UserId, @V6, @PosChiefOfficer, 1, '2022-07-10', '2022-11-15', 'Jebel Ali', 'Hong Kong', 'completed', NULL, 128, GETDATE()),
+(@A7, @UserId, @V7, @PosChiefOfficer, 1, '2023-01-05', '2023-05-10', 'Hong Kong', 'Long Beach', 'completed', NULL, 125, GETDATE()),
+(@A8, @UserId, @V8, @PosChiefOfficer, 1, '2023-07-01', '2023-11-05', 'Long Beach', 'Antwerp', 'completed', NULL, 127, GETDATE()),
+(@A9, @UserId, @V9, @PosChiefOfficer, 1, '2024-01-15', '2024-05-20', 'Antwerp', 'Singapore', 'completed', NULL, 126, GETDATE()),
+(@A10, @UserId, @V10, @PosChiefOfficer, 1, '2024-07-10', '2024-11-15', 'Singapore', 'Port Klang', 'completed', NULL, 128, GETDATE()),
+(@A11, @UserId, @V11, @PosChiefOfficer, 1, '2025-01-05', '2025-05-10', 'Port Klang', 'Hamburg', 'completed', NULL, 125, GETDATE()),
+(@A12, @UserId, @V12, @PosChiefOfficer, 1, '2025-07-01', '2025-11-05', 'Hamburg', 'Colombo', 'completed', NULL, 127, GETDATE()),
+(@A13, @UserId, @V13, @PosCaptain, 1, '2026-01-15', '2026-05-20', 'Colombo', 'Singapore', 'completed', NULL, 125, GETDATE()),
+(@A14, @UserId, @V14, @PosCaptain, 1, '2026-06-15', '2026-10-20', 'Singapore', 'Yokohama', 'currently-onboard', NULL, 127, GETDATE()),
+(@A15, @UserId, @V15, @PosCaptain, 1, '2027-01-10', '2027-05-15', 'Yokohama', 'Los Angeles', 'upcoming', 'Scheduled', 125, GETDATE()),
+(@A16, @UserId, @V1, @PosCaptain, 1, '2027-07-05', '2027-11-10', 'Los Angeles', 'Singapore', 'upcoming', 'Action Needed', 128, GETDATE()),
+(@A17, @UserId, @V1, @PosCaptain, 1, '2028-01-15', '2028-05-20', 'Singapore', 'Dubai', 'upcoming', NULL, 126, GETDATE()),
+(@A18, @UserId, @V18, @PosCaptain, 1, '2028-07-10', '2028-11-15', 'Dubai', 'Rotterdam', 'upcoming', 'Scheduled', 128, GETDATE()),
+(@A19, @UserId, @V19, @PosCaptain, 1, '2029-01-05', '2029-05-10', 'Rotterdam', 'Genoa', 'upcoming', 'Scheduled', 125, GETDATE()),
+(@A20, @UserId, @V20, @PosCaptain, 1, '2029-07-01', '2029-11-05', 'Genoa', 'Singapore', 'upcoming', 'Scheduled', 127, GETDATE());
 
 -- 6. Insert Vessel Requirements
 DELETE FROM [VesselRequirements];
@@ -164,7 +164,7 @@ INSERT INTO [News] ([Id], [Category], [Title], [PublishDate], [ReadTimeMinutes],
 
 -- 8. ComplianceAndRequirements Data
 INSERT INTO [ComplianceAndRequirements] ([Id], [DocumentName], [Status], [ExpiryDate], [IsRequired], [UserId], [DocumentTypeId], [CreatedAt]) VALUES
-(NEWID(), 'Passport', 'Valid', '2030-05-20', 1, @UserId, @DocPassport, GETDATE()),
+(NEWID(), 'Passport', 'Expired', '2020-01-01', 1, @UserId, @DocPassport, GETDATE()), -- This will trigger 'Action Needed' on linked assignments
 (NEWID(), 'Seaman''s Book', 'Valid', '2028-11-15', 1, @UserId, @DocSeamansBook, GETDATE()),
 (NEWID(), 'Medical Fitness Certificate (ENG1)', 'Expiring Soon', '2026-07-15', 1, @UserId, @DocMedical, GETDATE()),
 (NEWID(), 'STCW Basic Safety Training', 'Valid', '2029-01-10', 1, @UserId, @DocSTCW, GETDATE()),

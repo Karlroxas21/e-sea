@@ -24,8 +24,6 @@ public class AssignmentRepository : IAssignmentRepository
             Status.CurrentlyOnboard => "currently-onboard",
             Status.Upcoming => "upcoming",
             Status.Completed => "completed",
-            Status.Scheduled => "Scheduled",
-            Status.ActionNeeded => "Action Needed",
             _ => "completed"
         };
 
@@ -39,8 +37,7 @@ public class AssignmentRepository : IAssignmentRepository
             .ToListAsync(ct);
 
         int totalActive = counts.FirstOrDefault(c => c.Status == "currently-onboard")?.Count ?? 0;
-        int totalUpcoming = counts.Where(c => c.Status == "upcoming" || c.Status == "Scheduled" || c.Status == "Action Needed")
-                                  .Sum(c => c.Count);
+        int totalUpcoming = counts.FirstOrDefault(c => c.Status == "upcoming")?.Count ?? 0;
         int totalHistory = counts.FirstOrDefault(c => c.Status == "completed")?.Count ?? 0;
         int all = totalActive + totalUpcoming + totalHistory;
 
@@ -53,6 +50,7 @@ public class AssignmentRepository : IAssignmentRepository
         var items = await q
             .Include(a => a.Vessel)
                 .ThenInclude(v => v.VesselRequirements)
+                    .ThenInclude(vr => vr.DocumentType)
             .Include(a => a.User)
                 .ThenInclude(u => u.ComplianceAndRequirements)
             .Include(a => a.Position)
@@ -75,9 +73,10 @@ public class AssignmentRepository : IAssignmentRepository
     public async Task<List<Assignments>> GetUpcomingAssignmentsAsync(Guid userId, CancellationToken ct)
     {
         return await _db.Assignments
-            .Where(a => a.UserId == userId && (a.Status == "upcoming" || a.Status == "Scheduled" || a.Status == "Action Needed"))
+            .Where(a => a.UserId == userId && (a.Status == "upcoming" || a.Status == "currently-onboard"))
             .Include(a => a.Vessel)
                 .ThenInclude(v => v.VesselRequirements)
+                    .ThenInclude(vr => vr.DocumentType)
             .Include(a => a.User)
                 .ThenInclude(u => u.ComplianceAndRequirements)
             .ToListAsync(ct);

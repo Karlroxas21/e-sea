@@ -34,15 +34,19 @@ public class AssignmentService : IAssignmentService
             result.All
         );
     }
-
     public async Task RefreshAssignmentStatusesAsync(CancellationToken ct)
     {
         var userId = _userContext.UserId;
         var upcomingAssignments = await _assignmentRepository.GetUpcomingAssignmentsAsync(userId, ct);
 
+        // foreach(var a in upcomingAssignments)
+        // {
+        //     Console.WriteLine(a.Id);
+        // }
+       
         foreach (var assignment in upcomingAssignments)
         {
-            assignment.UpdateStatusFromCompliance();
+            assignment.CheckCompliance();
             await _assignmentRepository.UpdateAsync(assignment, ct);
         }
     }

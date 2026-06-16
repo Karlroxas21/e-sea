@@ -1,10 +1,18 @@
+using Domain.Entities;
+
 namespace Service.Dtos;
+
+public record VesselRequirementResponse(
+    Guid DocumentTypeId,
+    string DocumentName
+);
 
 public record VesselResponse(
     Guid Id,
     string ImoNumber,
     string Name,
-    string Type
+    string Type,
+    IEnumerable<VesselRequirementResponse> VesselRequirements
 );
 
 public record PositionResponse(
@@ -23,15 +31,23 @@ public record AssignmentResponse(
     string SignOnPort,
     string SignOffPort,
     string Status,
-    int DurationDays
+    string? Warning,
+    int DurationDays,
+    IEnumerable<ComplianceAndReqResponse> ComplianceRequirements
 )
 {
-    public static AssignmentResponse FromEntity(Domain.Entities.Assignments entity)
+    public static AssignmentResponse FromEntity(Assignments entity)
     {
         return new AssignmentResponse(
             entity.Id,
             entity.UserId,
-            new VesselResponse(entity.Vessel.Id, entity.Vessel.ImoNumber, entity.Vessel.Name, entity.Vessel.Type),
+            new VesselResponse(
+                entity.Vessel.Id,
+                entity.Vessel.ImoNumber,
+                entity.Vessel.Name,
+                entity.Vessel.Type,
+                entity.Vessel.VesselRequirements.Select(vr => new VesselRequirementResponse(vr.DocumentTypeId, vr.DocumentType?.Name ?? "Unknown"))
+            ),
             new PositionResponse(entity.Position.Id, entity.Position.Title),
             entity.IsPrimaryPosition,
             entity.SignOnDate,
@@ -39,7 +55,9 @@ public record AssignmentResponse(
             entity.SignOnPort,
             entity.SignOffPort,
             entity.Status,
-            entity.DurationDays
+            entity.Warning,
+            entity.DurationDays,
+            entity.User.ComplianceAndRequirements.Select(ComplianceAndReqResponse.FromEntity)
         );
     }
 }

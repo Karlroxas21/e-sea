@@ -31,6 +31,8 @@ public class AssignmentsConfiguration : IEntityTypeConfiguration<Assignments>
         builder.Property(a => a.Status)
            .IsRequired();
 
+        builder.Property(a => a.Warning);
+
         builder.Property(a => a.DurationDays)
             .IsRequired();
 

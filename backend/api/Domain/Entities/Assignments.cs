@@ -12,12 +12,13 @@ public class Assignments : Base
     public string SignOnPort { get; private set; }
     public string SignOffPort { get; private set; }
     public string Status { get; private set; }
+    public string? Warning { get; private set; }
     public int DurationDays { get; private set; }
     public User User { get; private set; }
     public Vessles Vessel { get; private set; }
     public Positions Position { get; private set; }
 
-    public void UpdateStatusFromCompliance()
+    public void CheckCompliance()
     {
         if (Vessel == null || User == null) return;
 
@@ -26,6 +27,7 @@ public class Assignments : Base
 
         bool allMet = true;
         bool actionNeeded = false;
+        bool atRisk = false;
 
         foreach (var reqDocTypeId in vesselRequirements)
         {
@@ -37,26 +39,30 @@ public class Assignments : Base
                 break;
             }
 
-            if (userDoc.Status == "Pending Review" || userDoc.Status == "Expired")
+            if (userDoc.Status == "Expired")
             {
                 actionNeeded = true;
                 break;
+            }
+
+            if (userDoc.Status == "Pending Review")
+            {
+                atRisk = true;
             }
 
             if (userDoc.ExpiryDate.HasValue && userDoc.ExpiryDate.Value <= DateOnly.FromDateTime(DateTime.UtcNow.AddDays(30)))
             {
-                actionNeeded = true;
-                break;
+                atRisk = true;
             }
         }
 
-        if (actionNeeded)
+        if (Status == "upcoming")
         {
-            Status = "Action Needed";
+            Warning = actionNeeded ? "Action Needed" : "Scheduled";
         }
-        else if (allMet && vesselRequirements.Count > 0)
+        else
         {
-            Status = "Scheduled";
+            Warning = null;
         }
     }
 }
