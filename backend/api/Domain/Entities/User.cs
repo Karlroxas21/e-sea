@@ -24,6 +24,8 @@ public class User : Base
 
     public ICollection<RecentActivityFeed> RecentActivityFeeds { get; private set; } = [];
 
+    public ICollection<RefreshToken> RefreshTokens { get; private set; } = [];
+
     public static User Create(
         string email,
         string password,

@@ -14,8 +14,9 @@ public class AuthServiceTests
     private readonly Mock<IUserRepository> _userRepo = new(MockBehavior.Strict);
     private readonly Mock<IJwtProvider> _jwt = new(MockBehavior.Strict);
     private readonly Mock<IBlacklistedTokenRepository> _blacklistRepo = new(MockBehavior.Strict);
+    private readonly Mock<IRefreshTokenRepository> _refreshTokenRepo = new(MockBehavior.Strict);
 
-    private AuthService CreateSut() => new(_userRepo.Object, _jwt.Object, _blacklistRepo.Object);
+    private AuthService CreateSut() => new(_userRepo.Object, _jwt.Object, _blacklistRepo.Object, _refreshTokenRepo.Object);
 
     [Fact]
     public async Task Logout_AddsTokenToBlacklist()
@@ -56,16 +57,55 @@ public class AuthServiceTests
         _userRepo.Setup(r => r.Login("captain@example.com", "pw", It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
         _jwt.Setup(j => j.GenerateToken(user)).Returns("jwt-token");
+        _refreshTokenRepo.Setup(r => r.RemoveByUserIdAsync(userId, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        _refreshTokenRepo.Setup(r => r.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
         var sut = CreateSut();
 
         var result = await sut.Login("captain@example.com", "pw");
 
-        Assert.Equal("jwt-token", result.Jwt);
-        Assert.Equal(userId, result.Id);
-        Assert.Equal("captain@example.com", result.Email);
-        Assert.Equal("Captain", result.FullName);
+        Assert.Equal("jwt-token", result.User.Jwt);
+        Assert.NotNull(result.RefreshToken);
+        Assert.Equal(userId, result.User.Id);
+        Assert.Equal("captain@example.com", result.User.Email);
+        Assert.Equal("Captain", result.User.FullName);
         _jwt.Verify(j => j.GenerateToken(user), Times.Once);
+        _refreshTokenRepo.Verify(r => r.RemoveByUserIdAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+        _refreshTokenRepo.Verify(r => r.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Refresh_ReturnsNewTokens_WhenRefreshTokenValid()
+    {
+        var userId = Guid.NewGuid();
+        var user = TestEntityFactory.User(userId, email: "captain@example.com", fullName: "Captain");
+        var oldToken = new RefreshToken
+        {
+            Token = "old-refresh-token",
+            UserId = userId,
+            User = user,
+            ExpiresAt = DateTime.UtcNow.AddDays(1)
+        };
+
+        _refreshTokenRepo.Setup(r => r.GetByTokenAsync("old-refresh-token", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(oldToken);
+        _jwt.Setup(j => j.GenerateToken(user)).Returns("new-jwt-token");
+        _refreshTokenRepo.Setup(r => r.RemoveAsync(oldToken, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+        _refreshTokenRepo.Setup(r => r.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var sut = CreateSut();
+
+        var result = await sut.Refresh("old-refresh-token");
+
+        Assert.Equal("new-jwt-token", result.User.Jwt);
+        Assert.NotNull(result.RefreshToken);
+        Assert.NotEqual("old-refresh-token", result.RefreshToken);
+        _refreshTokenRepo.Verify(r => r.RemoveAsync(oldToken, It.IsAny<CancellationToken>()), Times.Once);
+        _refreshTokenRepo.Verify(r => r.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Service.Dtos;
 using Service.Ports;
-
 namespace Entrypoint.Controllers;
 
 [ApiController]
@@ -21,9 +20,27 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request, CancellationToken ct)
     {
-        var user = await _authService.Login(request.Email, request.Password, ct);
+        var response = await _authService.Login(request.Email, request.Password, ct);
 
-        return Ok(user);
+        SetRefreshTokenCookie(response.RefreshToken);
+        return Ok(response.User);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(CancellationToken ct)
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+
+        if (string.IsNullOrEmpty(refreshToken))
+        {
+            return Unauthorized("Refresh token is missing.");
+        }
+
+        var response = await _authService.Refresh(refreshToken, ct);
+
+        SetRefreshTokenCookie(response.RefreshToken);
+        return Ok(response.User);
     }
 
     [AllowAnonymous]
@@ -48,8 +65,22 @@ public class AuthController : ControllerBase
 
         await _authService.Logout(token, ct);
 
+        Response.Cookies.Delete("refreshToken");
+
         return NoContent();
     }
 
+    private void SetRefreshTokenCookie(string refreshToken)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.UtcNow.AddDays(7)
+        };
+
+        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+    }
 
 }

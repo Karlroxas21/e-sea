@@ -11,6 +11,7 @@ public class ESeaDbContext(DbContextOptions<ESeaDbContext> options) : DbContext(
     public DbSet<Trainings> Trainings => Set<Trainings>();
     public DbSet<User> Users => Set<User>();
     public DbSet<BlacklistedToken> BlacklistedTokens => Set<BlacklistedToken>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Assignments> Assignments => Set<Assignments>();
     public DbSet<Vessles> Vessels => Set<Vessles>();
     public DbSet<Positions> Positions => Set<Positions>();
