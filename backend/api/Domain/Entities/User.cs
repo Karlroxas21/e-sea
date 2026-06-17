@@ -14,11 +14,9 @@ public class User : Base
 
     public string CurrentStatus { get; private set; }
 
-    public string? AssignedVessel { get; private set; }
-
-    public string JobTitle { get; private set; }
-
     public DateOnly? NextAssignmentDate { get; private set; }
+
+    public ICollection<Assignments> Assignments { get; private set; } = [];
 
     public ICollection<Trainings> Trainings { get; private set; } = [];
 
@@ -26,14 +24,14 @@ public class User : Base
 
     public ICollection<RecentActivityFeed> RecentActivityFeeds { get; private set; } = [];
 
+    public ICollection<RefreshToken> RefreshTokens { get; private set; } = [];
+
     public static User Create(
         string email,
         string password,
         string fullName,
         int complianceScore = 0,
-        string currentStatus = "not started",
-        string assignedVessel = null,
-        string jobTitle = ""
+        string currentStatus = "not started"
     )
     {
         var User = new User();
@@ -43,8 +41,6 @@ public class User : Base
         User.FullName = fullName;
         User.ComplianceScore = complianceScore;
         User.CurrentStatus = currentStatus;
-        User.AssignedVessel = assignedVessel;
-        User.JobTitle = jobTitle;
         User.CreatedAt = DateTime.Now;
 
         return User;

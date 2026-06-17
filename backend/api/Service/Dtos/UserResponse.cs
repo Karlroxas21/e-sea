@@ -9,8 +9,6 @@ public record UserResponse(
     string FullName,
     int ComplianceScore,
     string CurrentStatus,
-    string? AssignedVessel,
-    string JobTitle,
     DateOnly? NextAssignmentDate
 )
 
@@ -24,8 +22,6 @@ public record UserResponse(
             user.FullName,
             user.ComplianceScore,
             user.CurrentStatus,
-            user.AssignedVessel,
-            user.JobTitle,
             user.NextAssignmentDate
         );
     }

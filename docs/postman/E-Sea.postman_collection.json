@@ -1,0 +1,942 @@
+{
+  "info": {
+    "_postman_id": "1472381c-e179-46ae-a00d-b60d9a3ad208",
+    "name": "E-Sea",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40110647"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Register",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/v1/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 04 Jun 2026 08:58:06 GMT"
+                },
+                {
+                  "key": "Server",
+                  "value": "Kestrel"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Register",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/v1/api/auth/register",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Length",
+                  "value": "0"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 04 Jun 2026 08:58:06 GMT"
+                },
+                {
+                  "key": "Server",
+                  "value": "Kestrel"
+                }
+              ],
+              "cookie": [],
+              "body": null
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "const jwt = res.jwt;\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"jwt\", jwt);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/v1/api/auth/login",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 04 Jun 2026 09:03:22 GMT"
+                },
+                {
+                  "key": "Server",
+                  "value": "Kestrel"
+                },
+                {
+                  "key": "Transfer-Encoding",
+                  "value": "chunked"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"id\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n    \"jwt\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NWJiZTZmZS0wYTc0LTQxYjYtMjczNy0wOGRlYzIxNzY0OWIiLCJlbWFpbCI6ImttckBtZS1pY3QuY29tIiwibmFtZSI6IkthcmwgTWFyeCBSb3hhcyIsImV4cCI6MTc4MDU2NzQwMywiaXNzIjoiRVNlYUFwaSIsImF1ZCI6IkVTZWFGcm9udGVuZCJ9.-NubV6VdUxZ0h1SOH1jYGJmyHlvcyqVAgEqQlTkpBdA\",\n    \"email\": \"kmr@me-ict.com\",\n    \"fullName\": \"Karl Marx Roxas\",\n    \"complianceScore\": 0,\n    \"currentStatus\": \"not started\",\n    \"assignedVessel\": null,\n    \"jobTitle\": \"\",\n    \"nextAssignmentDate\": null\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "const jwt = res.jwt;\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"jwt\", jwt);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/auth/refresh",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Compliance and Requirements",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/compliance-requirements?page=1&pageSize=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "compliance-requirements"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Compliance and Requirements",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/compliance-requirements?page=1&pageSize=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "compliance-requirements"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 04 Jun 2026 10:07:04 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"items\": [\n        {\n            \"id\": \"004e27c7-1def-4227-bda3-00a38c7dfa64\",\n            \"documentName\": \"Oil Tanker Familiarization\",\n            \"status\": \"Valid\",\n            \"expiryDate\": \"2028-09-30\",\n            \"isRequired\": false,\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"fa36dace-bb97-4832-ac2a-09ea176af691\",\n            \"documentName\": \"Cyber Security Level 1\",\n            \"status\": \"Valid\",\n            \"expiryDate\": \"2027-02-15\",\n            \"isRequired\": true,\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        }\n    ],\n    \"page\": 1,\n    \"pageSize\": 2,\n    \"totalCount\": 20,\n    \"totalPages\": 10,\n    \"hasNext\": true,\n    \"hasPrevious\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "News",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/news?page=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "news"
+          ],
+          "query": [
+            {
+              "key": "pageSize",
+              "value": "0",
+              "disabled": true
+            },
+            {
+              "key": "page",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "News",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/news?page=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "news"
+              ],
+              "query": [
+                {
+                  "key": "pageSize",
+                  "value": "0",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 04 Jun 2026 10:10:45 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"items\": [\n        {\n            \"id\": \"ae3306ca-6500-466c-9201-6b88c47dd352\",\n            \"category\": \"Safety\",\n            \"title\": \"New Safety Regulations for 2026\",\n            \"publishDate\": \"2026-01-15\",\n            \"readTimeMinutes\": 5,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news1/400/300\",\n            \"contentUrl\": \"https://example.com/news/safety-2026\"\n        },\n        {\n            \"id\": \"401f175a-1760-4292-ab28-73025cc7134f\",\n            \"category\": \"Industry\",\n            \"title\": \"Canal Expansion Projects Update\",\n            \"publishDate\": \"2026-02-14\",\n            \"readTimeMinutes\": 11,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news11/400/300\",\n            \"contentUrl\": \"https://example.com/news/canal-expansion\"\n        },\n        {\n            \"id\": \"56bf908e-2ff8-4e9c-b7a1-76518a07154b\",\n            \"category\": \"Training\",\n            \"title\": \"Advanced Navigation Radar Course\",\n            \"publishDate\": \"2026-02-28\",\n            \"readTimeMinutes\": 5,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news18/400/300\",\n            \"contentUrl\": \"https://example.com/news/radar-course\"\n        },\n        {\n            \"id\": \"f1eb5b1e-6ba9-47a8-8f2c-9c776dd9a73d\",\n            \"category\": \"Company\",\n            \"title\": \"Q1 Fleet Performance Report\",\n            \"publishDate\": \"2026-03-10\",\n            \"readTimeMinutes\": 8,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news2/400/300\",\n            \"contentUrl\": \"https://example.com/news/fleet-q1\"\n        },\n        {\n            \"id\": \"5d39b548-dcec-4f92-99b0-a82561b45eb1\",\n            \"category\": \"Company\",\n            \"title\": \"Annual Crew Conference Highlights\",\n            \"publishDate\": \"2026-04-22\",\n            \"readTimeMinutes\": 9,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news19/400/300\",\n            \"contentUrl\": \"https://example.com/news/crew-conf\"\n        },\n        {\n            \"id\": \"f442eebc-1d72-4a80-b875-aef3b18afee5\",\n            \"category\": \"Industry\",\n            \"title\": \"Post-Pandemic Logistics: 5 Years Later\",\n            \"publishDate\": \"2026-05-20\",\n            \"readTimeMinutes\": 14,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news20/400/300\",\n            \"contentUrl\": \"https://example.com/news/logistics-5yrs\"\n        },\n        {\n            \"id\": \"7258641c-09b7-431c-b5d6-c0f685eb15d7\",\n            \"category\": \"Compliance\",\n            \"title\": \"Updated MARPOL Annex VI Requirements\",\n            \"publishDate\": \"2026-03-25\",\n            \"readTimeMinutes\": 15,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news9/400/300\",\n            \"contentUrl\": \"https://example.com/news/marpol-update\"\n        },\n        {\n            \"id\": \"610c9837-50d3-44f5-9b8e-cbadd1b51d68\",\n            \"category\": \"Welfare\",\n            \"title\": \"Mental Health Support Programs for Seafarers\",\n            \"publishDate\": \"2026-01-30\",\n            \"readTimeMinutes\": 7,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news7/400/300\",\n            \"contentUrl\": \"https://example.com/news/mental-health\"\n        },\n        {\n            \"id\": \"0ddb1655-ed5a-4691-9b77-d2c87d351711\",\n            \"category\": \"Safety\",\n            \"title\": \"Fire Drills: Best Practices for 2026\",\n            \"publishDate\": \"2026-04-30\",\n            \"readTimeMinutes\": 5,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news12/400/300\",\n            \"contentUrl\": \"https://example.com/news/fire-drills\"\n        },\n        {\n            \"id\": \"33fa6874-e53a-4f59-811f-e0ed3a074d0a\",\n            \"category\": \"Safety\",\n            \"title\": \"Lessons Learned from Recent Port Incidents\",\n            \"publishDate\": \"2026-05-28\",\n            \"readTimeMinutes\": 6,\n            \"thumbnailUrl\": \"https://picsum.photos/seed/news6/400/300\",\n            \"contentUrl\": \"https://example.com/news/port-incidents\"\n        }\n    ],\n    \"page\": 2,\n    \"pageSize\": 10,\n    \"totalCount\": 20,\n    \"totalPages\": 2,\n    \"hasNext\": false,\n    \"hasPrevious\": true\n}"
+        }
+      ]
+    },
+    {
+      "name": "Recent Actibity",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/recent-activities?page=1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "recent-activities"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "2",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Recent Actibity",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/recent-activities?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "recent-activities"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 04 Jun 2026 10:11:54 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"items\": [\n        {\n            \"id\": \"1129aae7-5135-495a-8b84-22ae8af53fc9\",\n            \"activityType\": \"Login\",\n            \"title\": \"System Login\",\n            \"description\": \"User logged into the portal from Singapore Office IP\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-06-04T07:11:16.0366667\"\n        },\n        {\n            \"id\": \"49d887cd-547c-4ad4-be0a-5845cb4c3372\",\n            \"activityType\": \"Document\",\n            \"title\": \"Passport Updated\",\n            \"description\": \"User uploaded a new scan of their passport\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-06-03T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"1910b765-31a5-40ce-b26d-6d4faa37b555\",\n            \"activityType\": \"Training\",\n            \"title\": \"Training Completed\",\n            \"description\": \"Seafarer completed the Mandatory Cybersecurity course\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-06-01T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"a7fb1263-1e99-43ea-a6d0-b05cd9738a14\",\n            \"activityType\": \"Profile\",\n            \"title\": \"Address Changed\",\n            \"description\": \"User updated their home address in the profile section\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-30T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"90bc47cc-8b3c-44f1-a7fe-f1f7bc9b0f51\",\n            \"activityType\": \"Notification\",\n            \"title\": \"Vessel Assignment\",\n            \"description\": \"New assignment to MV Blue Horizon confirmed\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-28T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"802ccdeb-bd1c-479e-8c3c-05ba57166ffb\",\n            \"activityType\": \"Compliance\",\n            \"title\": \"Medical Expiring\",\n            \"description\": \"System alert: ENG1 Medical Certificate expiring in 30 days\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-25T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"86eae382-3826-40c7-8de2-f87f6439ae27\",\n            \"activityType\": \"Document\",\n            \"title\": \"Schengen Visa Expired\",\n            \"description\": \"Automatic status update: Schengen Visa has expired\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-23T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"7b687ab5-4c7c-4fea-b3b2-577cda2435bc\",\n            \"activityType\": \"Training\",\n            \"title\": \"Course Scheduled\",\n            \"description\": \"Advanced Navigation Radar course scheduled for next month\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-20T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"0825303e-6854-49ef-b68c-38256cb75f3e\",\n            \"activityType\": \"Login\",\n            \"title\": \"System Login\",\n            \"description\": \"User logged into the portal via mobile app\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-19T09:11:16.0366667\"\n        },\n        {\n            \"id\": \"6df194c3-53c7-4472-a1c7-7bdb48dfe7fc\",\n            \"activityType\": \"Profile\",\n            \"title\": \"Email Verified\",\n            \"description\": \"User successfully verified their new secondary email address\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\",\n            \"createdAt\": \"2026-05-15T09:11:16.0366667\"\n        }\n    ],\n    \"page\": 1,\n    \"pageSize\": 10,\n    \"totalCount\": 20,\n    \"totalPages\": 2,\n    \"hasNext\": true,\n    \"hasPrevious\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Training",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/trainings?page=1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "trainings"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "pageSize",
+              "value": "2",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Training",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/trainings?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "trainings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Thu, 04 Jun 2026 10:13:15 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "Kestrel"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"items\": [\n        {\n            \"id\": \"4697811e-847a-40e3-afce-202170946cfc\",\n            \"title\": \"Cargo Handling and Stowage\",\n            \"providerOrLocation\": \"Maritime Institute\",\n            \"status\": \"Scheduled\",\n            \"scheduleDate\": \"2026-08-30T09:00:00\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"b6888ff2-e0e1-4a06-8369-2bb37e1b1c17\",\n            \"title\": \"First Aid at Sea - Refresher\",\n            \"providerOrLocation\": \"Red Cross Training Hub\",\n            \"status\": \"Completed\",\n            \"scheduleDate\": \"2026-04-04T09:11:16.04\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"1280951e-996c-43a9-a12e-3adeb915c731\",\n            \"title\": \"Deck Watchkeeping Familiarization\",\n            \"providerOrLocation\": \"On-board Training\",\n            \"status\": \"Completed\",\n            \"scheduleDate\": \"2026-05-04T09:11:16.04\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"0f5a82a4-b2bd-4669-a08e-42ce58fe5086\",\n            \"title\": \"Advanced Navigation Radar\",\n            \"providerOrLocation\": \"Maritime Academy Singapore\",\n            \"status\": \"Scheduled\",\n            \"scheduleDate\": \"2026-07-20T09:00:00\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"7dbf9ab4-f5dc-44ce-90d2-44a83892959f\",\n            \"title\": \"Advanced Liquefied Gas Tanker Ops\",\n            \"providerOrLocation\": \"Training Center Rotterdam\",\n            \"status\": \"Scheduled\",\n            \"scheduleDate\": \"2027-01-20T08:00:00\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"4ec8aa65-0e59-4149-b302-4b35f0e1048a\",\n            \"title\": \"Dangerous Goods (IMDG Code)\",\n            \"providerOrLocation\": \"E-Learning Portal\",\n            \"status\": \"Scheduled\",\n            \"scheduleDate\": \"2026-06-25T14:00:00\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"f9888c42-9ac4-44f0-a6bc-5f0471e2fa42\",\n            \"title\": \"Leadership and Teamwork\",\n            \"providerOrLocation\": \"Management Development Inst\",\n            \"status\": \"Completed\",\n            \"scheduleDate\": \"2025-10-04T09:11:16.04\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"f9ee3c6d-21ee-49bf-86e5-67539b809f9b\",\n            \"title\": \"Engine Room Resource Management\",\n            \"providerOrLocation\": \"SimTech Center\",\n            \"status\": \"Scheduled\",\n            \"scheduleDate\": \"2026-09-05T13:00:00\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"d9c18c48-4a99-455e-8de1-81dffef92745\",\n            \"title\": \"Mandatory Cybersecurity Training\",\n            \"providerOrLocation\": \"E-Learning Portal\",\n            \"status\": \"Completed\",\n            \"scheduleDate\": \"2026-06-01T09:11:16.04\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        },\n        {\n            \"id\": \"02feb583-f613-468b-9c27-87944608e0b2\",\n            \"title\": \"Electronic Chart Display (ECDIS)\",\n            \"providerOrLocation\": \"E-Learning Portal\",\n            \"status\": \"Completed\",\n            \"scheduleDate\": \"2025-06-04T09:11:16.04\",\n            \"userId\": \"85bbe6fe-0a74-41b6-2737-08dec217649b\"\n        }\n    ],\n    \"page\": 1,\n    \"pageSize\": 10,\n    \"totalCount\": 20,\n    \"totalPages\": 2,\n    \"hasNext\": true,\n    \"hasPrevious\": false\n}"
+        }
+      ]
+    },
+    {
+      "name": "Compliance Score",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/compliance-requirements/score",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "compliance-requirements",
+            "score"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pending Docs",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/documents/pending",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "documents",
+            "pending"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Open Jobs",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/documents/open-jobs",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "documents",
+            "open-jobs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Open Jobs Copy",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/trainings/stats",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "trainings",
+            "stats"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Assignments",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/assignments?status=Upcoming",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "assignments"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "Upcoming"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sync Compliance",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/assignments/sync-compliance",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "assignments",
+            "sync-compliance"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Total Sea Time",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/assignments/sea-time",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "assignments",
+            "sea-time"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "jwt",
+      "value": ""
+    }
+  ]
+}

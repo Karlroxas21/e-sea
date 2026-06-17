@@ -29,6 +29,10 @@ public static class DependencyInjection
         services.AddScoped<IRecentActivityRepository, RecentActivityRepository>();
         services.AddScoped<ITrainingRepository, TrainingRepository>();
         services.AddScoped<IBlacklistedTokenRepository, BlacklistedTokenRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+        services.AddScoped<IVesselsRepository, VesselsRepository>();
+        services.AddScoped<IPositionRepository, PositionRepository>();
 
         return services;
     }

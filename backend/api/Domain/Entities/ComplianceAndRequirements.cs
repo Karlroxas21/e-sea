@@ -9,4 +9,6 @@ public class ComplianceAndRequirements : Base
     public bool IsRequired { get; private set; }
     public Guid UserId { get; private set; }
     public User User { get; private set; }
+    public Guid DocumentTypeId { get; private set; }
+    public DocumentType DocumentType { get; private set; }
 }

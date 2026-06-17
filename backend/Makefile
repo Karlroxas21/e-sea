@@ -25,10 +25,16 @@ format-check:
 	dotnet format $(SOLUTION) --verify-no-changes --verbosity diagnostic
 
 db-up:
-	docker compose --profile dev up -d
+	docker compose --profile dev up -d mssql
 
 db-down:
 	docker compose --profile dev down
+
+docker-build:
+	docker compose --profile dev build
+
+up:
+	docker compose --profile dev up -d
 
 migration:
 	@[ -n "$(name)" ] || (echo "Usage: make migration name=<MigrationName>" && exit 1)
@@ -36,3 +42,5 @@ migration:
 
 migrate:
 	dotnet ef database update --project api/Infrastructure --startup-project $(ENTRYPOINT)
+	
+
