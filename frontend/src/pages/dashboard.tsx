@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react"
-import { Appnews } from "@/components/app-news"
+import { useEffect, useState, useMemo } from "react"
 import { 
   Download, 
   Upload, 
@@ -14,7 +13,8 @@ import {
   Bell
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import axios from "axios"
+import axios from '../lib/axios.ts';
+import { NewsComponent } from "@/components/NewsComponent"
 
 interface ActivityItem {
   id: string
@@ -34,12 +34,16 @@ interface ComplianceData {
 }
 
 function Dashboard() { 
+  const [stats, setStats] = useState({
+    activeTrainings: 0,
+    pendingDocs: 0,
+    openJobs: 0
+  });
   const [activities, setActivities] = useState<ActivityItem[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-
   const [compliance, setCompliance] = useState<ComplianceData | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(true) 
   const [isComplianceLoading, setIsComplianceLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -47,34 +51,33 @@ function Dashboard() {
         setIsLoading(true)
         setIsComplianceLoading(true)
         setError(null)
-        
-        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
-        const token = localStorage.getItem("authToken")
-        
-        const configHeaders = {
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-            ...(token ? { "Authorization": `Bearer ${token}` } : {})
-          }
-        }
 
-        const [activitiesRes, complianceRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/recent-activities?page=1`, configHeaders),
-          axios.get(`${API_BASE_URL}/compliance-requirements/score`, configHeaders)
+        const [
+            activitiesRes, 
+            complianceRes, 
+            trainingsRes, 
+            pendingDocsRes, 
+            openJobsRes
+        ] = await Promise.all([
+          axios.get('/recent-activities?page=1'),
+          axios.get('/compliance-requirements/score'),
+          axios.get('/trainings?page=1'),
+          axios.get('/documents/pending'),
+          axios.get('/documents/open-jobs')
         ])
 
-        if (activitiesRes.data && activitiesRes.data.items) {
-          setActivities(activitiesRes.data.items.slice(0, 5))
-        }
-
-        if (complianceRes.data) {
-          setCompliance(complianceRes.data)
-        }
+        if (activitiesRes.data?.items) setActivities(activitiesRes.data.items.slice(0, 5))
+        if (complianceRes.data) setCompliance(complianceRes.data)
+        
+        setStats({
+            activeTrainings: trainingsRes.data.totalCount || 0,
+            pendingDocs: pendingDocsRes.data.pending || 0,
+            openJobs: openJobsRes.data.open || 0
+        })
 
       } catch (err: any) {
         console.error("Error loading dashboard modules:", err)
-        setError("Could not retrieve current your dashboard account details.")
+        setError("Could not retrieve dashboard details.")
       } finally {
         setIsLoading(false)
         setIsComplianceLoading(false)
@@ -83,6 +86,32 @@ function Dashboard() {
 
     fetchDashboardData()
   }, [])
+
+  const currentScore = compliance?.score ?? 0;
+
+  const { greenBarWidth, amberBarWidth, redBarWidth } = useMemo(() => {
+    if (!compliance) return { greenBarWidth: 0, amberBarWidth: 0, redBarWidth: 0 };
+
+    const missingCount = compliance.details?.missing ?? 0;
+    const issueCount = compliance.details?.["expired/expiringsoon/pending"] ?? 0;
+    
+    const remainingPercentage = 100 - currentScore;
+    const totalDeficitCount = missingCount + issueCount;
+
+    if (totalDeficitCount > 0) {
+      return {
+        greenBarWidth: currentScore,
+        amberBarWidth: (issueCount / totalDeficitCount) * remainingPercentage,
+        redBarWidth: (missingCount / totalDeficitCount) * remainingPercentage
+      };
+    }
+
+    return {
+      greenBarWidth: currentScore,
+      amberBarWidth: 0,
+      redBarWidth: remainingPercentage
+    };
+  }, [compliance, currentScore]);
 
   const getRelativeTime = (dateString: string) => {
     try {
@@ -94,7 +123,6 @@ function Dashboard() {
       const msPerWeek = msPerDay * 7
       
       const elapsed = now.getTime() - past.getTime()
-
       if (elapsed < msPerMinute) return "Just now"
       if (elapsed < msPerHour) return `${Math.round(elapsed / msPerMinute)}m ago`
       if (elapsed < msPerDay) return `${Math.round(elapsed / msPerHour)}h ago`
@@ -102,130 +130,62 @@ function Dashboard() {
         const days = Math.round(elapsed / msPerDay)
         return days === 1 ? "Yesterday" : `${days} days ago`
       }
-      
       const weeks = Math.round(elapsed / msPerWeek)
       return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`
-    } catch {
-      return "Recent"
-    }
+    } catch { return "Recent" }
   }
 
   const getActivityStyles = (type: string) => {
     switch (type) {
-      case "Login":
-        return {
-          icon: <User className="h-4 w-4" />,
-          containerClass: "bg-slate-50 text-slate-600 border border-slate-200/50"
-        }
-      case "Document":
-        return {
-          icon: <Upload className="h-4 w-4" />,
-          containerClass: "bg-blue-50 text-blue-600 border border-blue-100/50"
-        }
-      case "Training":
-        return {
-          icon: <NotebookPen className="h-4 w-4" />,
-          containerClass: "bg-emerald-50 text-emerald-600 border border-emerald-100/50"
-        }
-      case "Compliance":
-        return {
-          icon: <AlertTriangle className="h-4 w-4" />,
-          containerClass: "bg-amber-50 text-amber-600 border border-amber-100/50"
-        }
-      case "Notification":
-        return {
-          icon: <Bell className="h-4 w-4" />,
-          containerClass: "bg-purple-50 text-purple-600 border border-purple-100/50"
-        }
-      default:
-        return {
-          icon: <StickyNote className="h-4 w-4" />,
-          containerClass: "bg-gray-50 text-gray-600 border border-gray-200/50"
-        }
+      case "Login": return { icon: <User className="h-4 w-4" />, containerClass: "bg-slate-50 text-slate-600 border border-slate-200/50" }
+      case "Document": return { icon: <Upload className="h-4 w-4" />, containerClass: "bg-blue-50 text-blue-600 border border-blue-100/50" }
+      case "Training": return { icon: <NotebookPen className="h-4 w-4" />, containerClass: "bg-emerald-50 text-emerald-600 border border-emerald-100/50" }
+      case "Compliance": return { icon: <AlertTriangle className="h-4 w-4" />, containerClass: "bg-amber-50 text-amber-600 border border-amber-100/50" }
+      case "Notification": return { icon: <Bell className="h-4 w-4" />, containerClass: "bg-purple-50 text-purple-600 border border-purple-100/50" }
+      default: return { icon: <StickyNote className="h-4 w-4" />, containerClass: "bg-gray-50 text-gray-600 border border-gray-200/50" }
     }
-  }
-
-  const currentScore = compliance?.score ?? 0
-  const missingCount = compliance?.details?.missing ?? 0
-  const issueCount = compliance?.details?.["expired/expiringsoon/pending"] ?? 0
-  
-  const greenBarWidth = currentScore
-
-  const remainingPercentage = 100 - currentScore
-  const totalDeficitCount = missingCount + issueCount
-
-  let amberBarWidth = 0
-  let redBarWidth = 0
-
-  if (remainingPercentage > 0 && totalDeficitCount > 0) {
-    amberBarWidth = (issueCount / totalDeficitCount) * remainingPercentage
-    redBarWidth = (missingCount / totalDeficitCount) * remainingPercentage
-  } else if (remainingPercentage > 0 && totalDeficitCount === 0) {
-    redBarWidth = remainingPercentage 
   }
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">Dashboard</h1>
           <p className="text-sm text-slate-500 mt-0.5">Welcome back. Here's an overview of your account.</p>
         </div>
-        <Button variant="outline" className="gap-2 bg-white text-sm font-medium border-slate-200 shadow-sm hover:bg-slate-50 cursor-pointer">
+        <Button variant="outline" className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-sm font-medium border-slate-200 shadow-sm hover:bg-slate-50 cursor-pointer">
           <Download className="h-4 w-4 text-slate-500" />
           Export Report
         </Button>
       </div>
 
-      <div className="w-full bg-uts-dark text-white rounded-xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="w-full bg-slate-900 text-white rounded-xl p-6 shadow-sm flex flex-col md:flex-row justify-between gap-6">
         <div className="flex flex-col gap-4">
           <div>
             <span className="text-slate-300 text-xs font-medium uppercase tracking-wider">Welcome back, Darryl</span>
             <h2 className="text-2xl font-bold tracking-tight mt-1">
               Your overall compliance is{" "}
-              <span className="text-gold">
+              <span className="text-amber-500">
                 {isComplianceLoading ? "..." : `${currentScore}%`}
               </span>
             </h2>
           </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-300">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-slate-400" />
-              <span>Status: Lined Up</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-slate-400" />
-              <span>MS Eurodam - Able Seaman</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-slate-400" />
-              <span>Next assignment: Jan 05, 2026</span>
-            </div>
+             <div className="flex items-center gap-2"><Clock className="h-4 w-4 text-slate-400" /><span>Status: Lined Up</span></div>
+             <div className="flex items-center gap-2"><MapPin className="h-4 w-4 text-slate-400" /><span>MS Eurodam</span></div>
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-1.5 min-w-[200px] w-full md:w-auto border-l border-slate-700/60 pl-0 md:pl-6">
+        <div className="flex flex-col items-center md:items-end gap-1.5 w-full md:w-auto border-t border-slate-700/60 pt-4 md:pt-0 md:border-t-0 md:border-l md:border-slate-700/60 md:pl-6">
           <span className="text-xs text-slate-400 font-medium uppercase tracking-wider">Compliance Score</span>
           <div className="flex items-baseline gap-1">
-            <span className="text-3xl font-black tracking-tight">
-              {isComplianceLoading ? "..." : currentScore}
-            </span>
+            <span className="text-3xl font-black tracking-tight">{isComplianceLoading ? "..." : currentScore}</span>
             <span className="text-slate-400 text-sm font-semibold">%</span>
           </div>
-
-          <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mt-1 flex">
-            <div 
-              className="h-full bg-green-500 transition-all duration-300" 
-              style={{ width: `${greenBarWidth}%` }} 
-            />
-            <div 
-              className="h-full bg-amber-500 transition-all duration-300" 
-              style={{ width: `${amberBarWidth}%` }} 
-            />
-            <div 
-              className="h-full bg-red-500 transition-all duration-300" 
-              style={{ width: `${redBarWidth}%` }} 
-            />
+          <div className="w-full md:w-48 h-2 bg-slate-800 rounded-full overflow-hidden mt-1 flex">
+            <div className="h-full bg-green-500 transition-all duration-300" style={{ width: `${greenBarWidth}%` }} />
+            <div className="h-full bg-amber-500 transition-all duration-300" style={{ width: `${amberBarWidth}%` }} />
+            <div className="h-full bg-red-500 transition-all duration-300" style={{ width: `${redBarWidth}%` }} />
           </div>
         </div>
       </div>
@@ -233,22 +193,15 @@ function Dashboard() {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="bg-white border border-slate-200/60 p-5 rounded-xl shadow-sm flex flex-col gap-1">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Trainings</span>
-          <span className="text-3xl font-bold tracking-tight text-slate-900 mt-1">3</span>
-          <span className="text-xs text-slate-500 mt-2">2 in progress, 1 awaiting start</span>
+          <span className="text-3xl font-bold tracking-tight text-slate-900 mt-1">{isLoading ? "..." : stats.activeTrainings}</span>
         </div>
-        
         <div className="bg-white border border-slate-200/60 p-5 rounded-xl shadow-sm flex flex-col gap-1">
-          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending/Missing Documents</span>
-          <span className="text-3xl font-bold tracking-tight text-red-500 mt-1">
-            {isComplianceLoading ? "..." : missingCount}
-          </span>
-          <span className="text-xs text-slate-500 mt-2">Upload required to proceed</span>
+          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending Documents</span>
+          <span className="text-3xl font-bold tracking-tight text-red-500 mt-1">{isLoading ? "..." : stats.pendingDocs}</span>
         </div>
-
         <div className="bg-white border border-slate-200/60 p-5 rounded-xl shadow-sm flex flex-col gap-1">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Open Job Posts</span>
-          <span className="text-3xl font-bold tracking-tight text-slate-900 mt-1">12</span>
-          <span className="text-xs text-slate-500 mt-2">Matching your profile</span>
+          <span className="text-3xl font-bold tracking-tight text-slate-900 mt-1">{isLoading ? "..." : stats.openJobs}</span>
         </div>
       </div>
 
@@ -379,7 +332,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <Appnews />
+      <NewsComponent />
     </>
   )
 }

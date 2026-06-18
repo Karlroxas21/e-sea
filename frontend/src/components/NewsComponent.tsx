@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import axios from "axios"
+import axios from '../lib/axios.ts';
 
 interface NewsItem {
   id: string
@@ -17,46 +17,37 @@ interface NewsItem {
   contentUrl: string
 }
 
-export function Appnews() {
+export function NewsComponent() {
   const [newsItems, setNewsItems] = useState<NewsItem[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-        
-        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
-        
-        const token = localStorage.getItem("authToken")
-        
-        const response = await axios.get(`${API_BASE_URL}/news?page=1`, {
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-            ...(token && { "Authorization": `Bearer ${token}` })
-          },
-        })
+ useEffect(() => {
+  const fetchNews = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        if (response.data && response.data.items) {
-          setNewsItems(response.data.items.slice(0, 3))
-        }
-      } catch (err: any) {
-        console.error("Error loading news feed:", err)
-        if (err.response?.status === 401) {
-          setError("Your session has expired. Please sign in again.")
-        } else {
-          setError("Unable to load latest news updates.")
-        }
-      } finally {
-        setIsLoading(false)
+      const response = await axios.get("/news?page=1");
+
+      if (response.data?.items) {
+        setNewsItems(response.data.items.slice(0, 3));
       }
+    } catch (err: any) {
+      console.error("Error loading news feed:", err);
+      
+      if (err.response?.status === 401) {
+        setError("Your session has expired. Please sign in again.");
+      } else {
+        setError("Unable to load latest news updates.");
+      }
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    fetchNews()
-  }, [])
+  fetchNews();
+}, []);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -88,8 +79,7 @@ export function Appnews() {
         <div className="grid gap-4 md:grid-cols-3">
           {newsItems.map((news) => (
             <Card 
-              key={news.id} 
-              onClick={() => window.open(news.contentUrl, "_blank", "noopener,noreferrer")}
+              key={news.id}
               className="overflow-hidden border-slate-200/60 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer group"
             >
               <div className="relative aspect-[16/9] w-full bg-slate-100 overflow-hidden">

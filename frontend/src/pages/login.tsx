@@ -11,7 +11,17 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
-import axios from "axios"
+import axios from "../lib/axios"
+
+interface AuthResponse {
+  id: string;
+  jwt: string;
+  email: string;
+  fullName: string;
+  complianceScore: number;
+  currentStatus: string;
+  nextAssignmentDate: string;
+}
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -20,34 +30,19 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/auth/login`,
-        { email, password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true", 
-          },
-        }
-      )
-
-      const data = response.data
-
-      if (data && data.jwt) {
-        localStorage.setItem("authToken", data.jwt)
-        console.log("Token successfully stored in localStorage!")
+      const{ data } = await axios.post<AuthResponse>("/auth/login", { email, password })
+      if (data?.jwt) {
+        localStorage.setItem("authToken", data.jwt);
+        navigate("/dashboard");
       }
-      navigate("/pages/dashboard") 
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || "Something went wrong."
+      const errorMessage = err.response?.data?.message || "Login failed."
       setError(errorMessage)
     } finally {
       setIsLoading(false)
@@ -106,6 +101,7 @@ export default function LoginPage() {
                 required  
                 className="border-slate-200 focus-visible:ring-uts-dark" 
                 disabled={isLoading}
+                autoComplete="autoc"
               />
             </div>
             <Button 

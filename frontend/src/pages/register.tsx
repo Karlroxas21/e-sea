@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useNavigate } from "react-router-dom"
-import axios from "axios" 
+import axios from '../lib/axios.ts';
 
 export default function RegisterPage() {
   const navigate = useNavigate()
@@ -21,35 +21,28 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsLoading(true)
+        setError(null)
 
-    try {
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
-      
-      await axios.post(
-        `${API_BASE_URL}/auth/register`,
-        { email, password, fullName },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
-          },
+        try {
+        await axios.post("/auth/register", { 
+            email, 
+            password, 
+            fullName 
+        })
+
+        navigate("/", { 
+            state: { successMessage: "Registration successful! You can now login." } 
+        }) 
+        } catch (err: any) {
+        const errorMessage = err.response?.data?.message || "Registration failed. Please try again."
+        setError(errorMessage)
+        } finally {
+        setIsLoading(false)
         }
-      )
-
-      navigate("/", { 
-        state: { successMessage: "Registration successful! You can now login." } 
-      }) 
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || err.message || "Something went wrong during registration."
-      setError(errorMessage)
-    } finally {
-      setIsLoading(false)
     }
-  }
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-uts-main p-4">

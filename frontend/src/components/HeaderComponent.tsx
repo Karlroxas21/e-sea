@@ -2,7 +2,7 @@ import { Search, Bell, MessageSquare, HelpCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-export function AppHeader() {
+export function HeaderComponent() {
   return (
     <header className="flex h-16 shrink-0 items-center border-b border-slate-300 px-6 ">
         <div className="flex w-full items-center justify-between gap-4">
