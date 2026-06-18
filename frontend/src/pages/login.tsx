@@ -37,10 +37,10 @@ export default function LoginPage() {
 
     try {
       const{ data } = await axios.post<AuthResponse>("/auth/login", { email, password })
-      if (data && data.jwt) {
-        localStorage.setItem("authToken", data.jwt)
+      if (data?.jwt) {
+        localStorage.setItem("authToken", data.jwt);
+        navigate("/dashboard");
       }
-      navigate("/dashboard") 
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || "Login failed."
       setError(errorMessage)

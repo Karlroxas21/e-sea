@@ -79,6 +79,7 @@ export function NewsComponent() {
         <div className="grid gap-4 md:grid-cols-3">
           {newsItems.map((news) => (
             <Card 
+              key={news.id}
               className="overflow-hidden border-slate-200/60 shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer group"
             >
               <div className="relative aspect-[16/9] w-full bg-slate-100 overflow-hidden">
