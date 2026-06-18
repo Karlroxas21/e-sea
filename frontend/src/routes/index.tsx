@@ -3,7 +3,7 @@ import { protectedRoutes } from './protected';
 import { publicRoutes } from './public';
 
 export const AppRouter = () => {
-  const element = useRoutes([...publicRoutes, ...protectedRoutes]);
+    const element = useRoutes([...publicRoutes, ...protectedRoutes]);
 
-  return <>{element}</>;
+    return <>{element}</>;
 };

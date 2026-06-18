@@ -1,59 +1,59 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @layer base {
-  :root {
-    --uts-main-bg: #EEF3FA;
-    --link-water: #EFF6FF;
-    --periwinkle-gray: #D4DFEE;
-    --pirate-gold: #D4AF37;
-    --purple-bg: #7357C7;
-    --dark-purple-bg: #DCD7EB;
-    --green-bg: #00897B;
-    --dark-green-bg: #004D40;
-    --blue-bg: #4A90E2;
-    --dark-blue-bg: #2D6CB8;
-    --uts-dark-bg: #0A2547;
-  }
+    :root {
+        --uts-main-bg: #eef3fa;
+        --link-water: #eff6ff;
+        --periwinkle-gray: #d4dfee;
+        --pirate-gold: #d4af37;
+        --purple-bg: #7357c7;
+        --dark-purple-bg: #dcd7eb;
+        --green-bg: #00897b;
+        --dark-green-bg: #004d40;
+        --blue-bg: #4a90e2;
+        --dark-blue-bg: #2d6cb8;
+        --uts-dark-bg: #0a2547;
+    }
 }
 
 @layer utilities {
-  .bg-uts-main {
-    background-color: var(--uts-main-bg);
-  }
+    .bg-uts-main {
+        background-color: var(--uts-main-bg);
+    }
 
-  .bg-uts-dark {
-    background-color: var(--uts-dark-bg);
-  }
+    .bg-uts-dark {
+        background-color: var(--uts-dark-bg);
+    }
 
-   .text-uts-dark {
-    color: var(--uts-dark-bg);
-  }
+    .text-uts-dark {
+        color: var(--uts-dark-bg);
+    }
 
-  .search-bg {
-    background-color: var(--periwinkle-gray);
-  }
+    .search-bg {
+        background-color: var(--periwinkle-gray);
+    }
 
-  .icon-gold {
-    color: var(--pirate-gold);
-  }
-  
-  .text-gold {
-    color: var(--pirate-gold);
-  }
+    .icon-gold {
+        color: var(--pirate-gold);
+    }
 
-  .bg-purple {
-    background-image: linear-gradient(to right, var(--purple-bg), var(--dark-purple-bg));
-  }
+    .text-gold {
+        color: var(--pirate-gold);
+    }
 
-  .bg-green {
-    background-image: linear-gradient(to right, var(--green-bg), var(--dark-green-bg));
-  }
+    .bg-purple {
+        background-image: linear-gradient(to right, var(--purple-bg), var(--dark-purple-bg));
+    }
 
-  .bg-blue {
-    background-image: linear-gradient(to right, var(--blue-bg), var(--dark-blue-bg));
-  }
+    .bg-green {
+        background-image: linear-gradient(to right, var(--green-bg), var(--dark-green-bg));
+    }
 
-  #root {
-    background-color: var(--uts-main-bg);
-  }
+    .bg-blue {
+        background-image: linear-gradient(to right, var(--blue-bg), var(--dark-blue-bg));
+    }
+
+    #root {
+        background-color: var(--uts-main-bg);
+    }
 }

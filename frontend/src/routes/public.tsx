@@ -3,11 +3,11 @@ import RegisterPage from '@/features/auth/routes/Register';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
 
 export const publicRoutes = [
-  {
-    element: <PublicLayout />,
-    children: [
-      { path: '/', element: <LoginPage /> },
-      { path: '/register', element: <RegisterPage /> },
-    ],
-  },
+    {
+        element: <PublicLayout />,
+        children: [
+            { path: '/', element: <LoginPage /> },
+            { path: '/register', element: <RegisterPage /> },
+        ],
+    },
 ];

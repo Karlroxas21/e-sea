@@ -4,12 +4,12 @@ import Assignments from '@/features/assignments/routes/Assignments';
 import { ProtectedLayout } from '@/components/layouts/ProtectedLayout';
 
 export const protectedRoutes = [
-  {
-    element: <ProtectedLayout />,
-    children: [
-      { path: '/dashboard', element: <Dashboard /> },
-      { path: '/assignments', element: <Assignments /> },
-      { path: '*', element: <Navigate to="/dashboard" /> },
-    ],
-  },
+    {
+        element: <ProtectedLayout />,
+        children: [
+            { path: '/dashboard', element: <Dashboard /> },
+            { path: '/assignments', element: <Assignments /> },
+            { path: '*', element: <Navigate to="/dashboard" /> },
+        ],
+    },
 ];
