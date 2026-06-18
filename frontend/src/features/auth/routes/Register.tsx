@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
-import axios from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function RegisterPage() {
         setError(null);
 
         try {
-            await axios.post('/auth/register', {
+            await api.post('/auth/register', {
                 email,
                 password,
                 fullName,

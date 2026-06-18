@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 import { useLocation } from 'react-router-dom';
 import UTSLogo from '@/assets/UTS.png';
 import UTSLogoIcon from '@/assets/UTS_LOGO.png';
-import axios from '../lib/axios.ts';
+import { api } from '../lib/axios.ts';
 
 const mainNavItems = [
     { title: 'Dashboard', url: '/dashboard', icon: House, isActive: true },
@@ -56,7 +56,7 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
 
     const handleSignOut = async () => {
         try {
-            await axios.post('/auth/logout');
+            await api.post('/auth/logout');
         } catch (error) {
             console.error('Sign out request failed:', error);
         } finally {
@@ -85,11 +85,11 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
                     />
                     {isCollapsed ? (
                         <div onClick={toggleSidebar}>
-                            <ArrowLeftToLine size="16" />
+                            <ArrowRightToLine size="16" />
                         </div>
                     ) : (
                         <div onClick={toggleSidebar}>
-                            <ArrowRightToLine size="16" />
+                            <ArrowLeftToLine size="16" />
                         </div>
                     )}
                 </div>

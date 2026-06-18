@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import axios from '../lib/axios.ts';
+import { api } from '../lib/axios.ts';
 
 interface NewsItem {
     id: string;
@@ -23,10 +23,10 @@ export function NewsComponent() {
                 setIsLoading(true);
                 setError(null);
 
-                const response = await axios.get('/news?page=1');
+                const data: any = await api.get('/news?page=1');
 
-                if (response.data?.items) {
-                    setNewsItems(response.data.items.slice(0, 3));
+                if (data?.items) {
+                    setNewsItems(data.items.slice(0, 3));
                 }
             } catch (err: any) {
                 console.error('Error loading news feed:', err);

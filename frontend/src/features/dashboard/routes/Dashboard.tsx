@@ -13,7 +13,7 @@ import {
     Bell,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import axios from '@/lib/axios';
+import { api } from '@/lib/axios';
 import { NewsComponent } from '@/components/NewsComponent';
 
 interface ActivityItem {
@@ -52,22 +52,22 @@ function Dashboard() {
                 setIsComplianceLoading(true);
                 setError(null);
 
-                const [activitiesRes, complianceRes, trainingsRes, pendingDocsRes, openJobsRes] =
+                const [activitiesData, complianceData, trainingsData, pendingDocsData, openJobsData] =
                     await Promise.all([
-                        axios.get('/recent-activities?page=1'),
-                        axios.get('/compliance-requirements/score'),
-                        axios.get('/trainings?page=1'),
-                        axios.get('/documents/pending'),
-                        axios.get('/documents/open-jobs'),
+                        api.get<any>('/recent-activities?page=1'),
+                        api.get<ComplianceData>('/compliance-requirements/score'),
+                        api.get<any>('/trainings?page=1'),
+                        api.get<any>('/documents/pending'),
+                        api.get<any>('/documents/open-jobs'),
                     ]);
 
-                if (activitiesRes.data?.items) setActivities(activitiesRes.data.items.slice(0, 5));
-                if (complianceRes.data) setCompliance(complianceRes.data);
+                if (activitiesData?.items) setActivities(activitiesData.items.slice(0, 5));
+                if (complianceData) setCompliance(complianceData);
 
                 setStats({
-                    activeTrainings: trainingsRes.data.totalCount || 0,
-                    pendingDocs: pendingDocsRes.data.pending || 0,
-                    openJobs: openJobsRes.data.open || 0,
+                    activeTrainings: trainingsData.totalCount || 0,
+                    pendingDocs: pendingDocsData.pending || 0,
+                    openJobs: openJobsData.open || 0,
                 });
             } catch (err: any) {
                 console.error('Error loading dashboard modules:', err);

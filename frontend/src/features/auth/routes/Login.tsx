@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
-import axios from '@/lib/axios';
+import { api } from '@/lib/axios';
 
 interface AuthResponse {
     id: string;
@@ -36,7 +36,7 @@ export default function LoginPage() {
         setError(null);
 
         try {
-            const { data } = await axios.post<AuthResponse>('/auth/login', { email, password });
+            const data = await api.post<AuthResponse>('/auth/login', { email, password });
             if (data?.jwt) {
                 localStorage.setItem('authToken', data.jwt);
                 navigate('/dashboard');
