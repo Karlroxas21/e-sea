@@ -13,7 +13,7 @@ import {
   Bell
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import axios from '../lib/axios.ts';
+import axios from "@/lib/axios"
 import { NewsComponent } from "@/components/NewsComponent"
 
 interface ActivityItem {

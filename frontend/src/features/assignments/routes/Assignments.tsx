@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from '../lib/axios.ts';
+import axios from "@/lib/axios"
 import { Download, Plus, Search, ChevronDown, Anchor, MapPin, MoreVertical, Calendar, ArrowRight } from 'lucide-react';
 import { AssignmentCard } from '@/components/AssignmentCardComponent.tsx';
 import { AssignmentTable } from '@/components/AssignmentTableComponent.tsx';
@@ -119,7 +119,7 @@ export default function Assignments() {
           </button>
           <button className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 h-10 bg-[#0B2545] hover:opacity-90 text-white text-sm font-semibold rounded-md transition-colors shadow-sm cursor-pointer">
             <Plus className="h-4 w-4" />
-            <span>New</span>
+            <span>New Assignment</span>
           </button>
         </div>
       </div>

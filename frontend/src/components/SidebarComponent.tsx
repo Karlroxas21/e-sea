@@ -1,7 +1,9 @@
-import { 
+import {
   House, FileText, ShieldCheck, Anchor, Briefcase,
   GraduationCap, ClipboardCheck, BookOpen, FolderOpen, Newspaper,
   Settings, LogOut,
+  ArrowLeftToLine,
+  ArrowRightToLine,
 } from "lucide-react"
 
 import {
@@ -35,8 +37,8 @@ const activityNavItems = [
 export function SidebarComponent({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state, toggleSidebar } = useSidebar()
   const location = useLocation();
-  
- const handleSignOut = async () => {
+
+  const handleSignOut = async () => {
     try {
       await axios.post("/auth/logout");
     } catch (error) {
@@ -47,26 +49,30 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
     }
   };
 
+  const isCollapsed = state === "collapsed";
+
   return (
-    <Sidebar 
-      collapsible="icon" 
-      {...props} 
+    <Sidebar
+      collapsible="icon"
+      {...props}
       className={cn("border-y-0 border-slate-300", className)}
     >
       <SidebarHeader className="p-4 md:p-6 group-data-[collapsible=icon]:p-4">
-        <div 
-          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity group-data-[collapsible=icon]:justify-center"
-          onClick={toggleSidebar}
+        <div
+          className="flex justify-between items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity group-data-[collapsible=icon]:justify-center"
           title="Toggle Sidebar"
         >
-          <img 
-            src={state === "collapsed" ? UTSLogoIcon : UTSLogo} 
-            alt="UTS Logo" 
-            className={cn(
-              "transition-all duration-200 object-contain",
-              "h-10 w-auto" 
-            )} 
+          <img
+            src={isCollapsed ? UTSLogoIcon : UTSLogo}
+            alt="UTS Logo"
+            className={`${isCollapsed ? 'hidden' : 'block'} transition-all duration-200 object-contain h-10 w-auto`}
           />
+          {isCollapsed ? <div
+            onClick={toggleSidebar}>
+            <ArrowLeftToLine size="16" />
+          </div> :
+            <div onClick={toggleSidebar}><ArrowRightToLine size="16" /></div>}
+
         </div>
       </SidebarHeader>
 
@@ -78,16 +84,16 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNavItems.map((item) => {
-                const isActive = location.pathname === item.url; 
-                
+                const isActive = location.pathname === item.url;
+
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton 
-                      asChild 
+                    <SidebarMenuButton
+                      asChild
                       className={cn(
                         "h-9 px-4 rounded-md transition-all duration-200 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0",
                         isActive
-                          ? "bg-[#0B2545] text-white hover:bg-[#0B2545] hover:text-white" 
+                          ? "bg-[#0B2545] text-white hover:bg-[#0B2545] hover:text-white"
                           : "text-slate-500 hover:bg-slate-100"
                       )}
                     >
@@ -118,8 +124,8 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
             <SidebarMenu>
               {activityNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild 
+                  <SidebarMenuButton
+                    asChild
                     className="h-9 px-4 text-slate-500 hover:bg-slate-100 rounded-md group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
                   >
                     <a href={item.url} className="flex items-center gap-3">
@@ -151,7 +157,7 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
             <button className="h-8 w-8 flex items-center justify-center text-slate-400 hover:text-slate-600 cursor-pointer rounded-md hover:bg-slate-50 transition-colors">
               <Settings className="h-4 w-4" />
             </button>
-            <button 
+            <button
               onClick={handleSignOut}
               className="h-8 w-8 flex items-center justify-center text-slate-400 hover:text-red-600 cursor-pointer rounded-md hover:bg-red-50 transition-colors"
               title="Sign Out"
