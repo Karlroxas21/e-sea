@@ -47,7 +47,7 @@ export default function Assignments() {
     const isLoading = isLoadingActive || isLoadingUpcoming || isLoadingHistory || isLoadingSeaTime || isLoadingStats;
 
     // Remove the !
-    if (!isAddingAssignment) {
+    if (isAddingAssignment) {
         return <div className='flex justify-center items-center'><AddAssignment /></div>;
     }
 
