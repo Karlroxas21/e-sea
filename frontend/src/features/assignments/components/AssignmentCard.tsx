@@ -1,7 +1,8 @@
 import { Anchor, MapPin, MoreVertical, Calendar, ArrowRight } from 'lucide-react';
+import type { Assignment } from '../types';
 
 interface AssignmentCardProps {
-    item: any;
+    item: Assignment;
     variant: 'active' | 'upcoming';
     calculateProgress?: (
         signOn: string,

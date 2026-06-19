@@ -1,104 +1,33 @@
 import { useState, useEffect } from 'react';
-import axios from '@/lib/axios';
 import {
     Download,
     Plus,
     Search,
     ChevronDown,
-    Anchor,
-    MapPin,
-    MoreVertical,
-    Calendar,
-    ArrowRight,
 } from 'lucide-react';
-import { AssignmentCard } from '@/components/AssignmentCardComponent.tsx';
-import { AssignmentTable } from '@/components/AssignmentTableComponent.tsx';
-
-interface Assignment {
-    id: string;
-    status: string;
-    signOnDate: string;
-    warning: string;
-    signOffDate: string;
-    signOnPort: string;
-    signOffPort: string;
-    durationDays: number;
-    vessel: {
-        name: string;
-        imoNumber: string;
-        type: string;
-    };
-    position: {
-        title: string;
-    };
-}
-
-interface Stats {
-    totalActive: number;
-    totalUpcoming: number;
-    totalHistory: number;
-    all: number;
-}
-
-interface SeaTime {
-    days: number;
-    totalSeaDays?: number;
-}
+import { AssignmentCard, AssignmentTable } from '../components';
+import { useAssignments, useSeaTime, useAssignmentStats } from '../api/getAssignments';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useAssignmentStore } from '../store/useAssignmentStore';
+import AddAssignment from './AddAssignment';
 
 export default function Assignments() {
-    const [active, setActive] = useState<Assignment[]>([]);
-    const [upcoming, setUpcoming] = useState<Assignment[]>([]);
-    const [history, setHistory] = useState<Assignment[]>([]);
-
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const [seaTime, setSeaTime] = useState<SeaTime>({ days: 0, totalSeaDays: 0 });
-    const safeTotalSeaDays = seaTime.totalSeaDays ?? 0;
-    const safeTarget = seaTime.totalSeaDays ?? 0;
-    const progressPercentage = Math.min(100, (safeTotalSeaDays / safeTarget) * 100);
-
-    const [stats, setStats] = useState<Stats>({
-        totalActive: 0,
-        totalUpcoming: 0,
-        totalHistory: 0,
-        all: 0,
-    });
+    const { isAddingAssignment, setIsAddingAssignment, reset } = useAssignmentStore();
 
     useEffect(() => {
-        const fetchAllData = async () => {
-            try {
-                setLoading(true);
+        return () => reset();
+    }, [reset]);
 
-                const [activeRes, upcomingRes, historyRes, seaTimeRes] = await Promise.all([
-                    axios.get('/assignments', { params: { status: 'CurrentlyOnboard' } }),
-                    axios.get('/assignments', { params: { status: 'Upcoming' } }),
-                    axios.get('/assignments', { params: { status: 'Completed' } }),
-                    axios.get('/assignments/sea-time'),
-                ]);
+    const { data: active = [], isLoading: isLoadingActive } = useAssignments({ status: 'CurrentlyOnboard' });
+    const { data: upcoming = [], isLoading: isLoadingUpcoming } = useAssignments({ status: 'Upcoming' });
+    const { data: history = [], isLoading: isLoadingHistory } = useAssignments({ status: 'Completed' });
+    const { data: seaTime, isLoading: isLoadingSeaTime } = useSeaTime();
+    const { data: stats, isLoading: isLoadingStats } = useAssignmentStats();
 
-                setActive(activeRes.data.items || activeRes.data || []);
-                setUpcoming(upcomingRes.data.items || upcomingRes.data || []);
-                setHistory(historyRes.data.items || historyRes.data || []);
+    const [activeTab, setActiveTab] = useState(0);
 
-                setSeaTime(seaTimeRes.data);
-
-                setStats({
-                    totalActive: activeRes.data.totalActive || 0,
-                    totalUpcoming: activeRes.data.totalUpcoming || 0,
-                    totalHistory: activeRes.data.totalHistory || 0,
-                    all: activeRes.data.all || 0,
-                });
-            } catch (err) {
-                console.error('Error fetching data:', err);
-                setError('Failed to load assignments');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAllData();
-    }, []);
+    const safeTotalSeaDays = seaTime?.totalSeaDays ?? 0;
+    const progressPercentage = Math.min(100, (safeTotalSeaDays / (seaTime?.totalSeaDays || 1)) * 100);
 
     const calculateProgress = (signOn: string, signOff: string) => {
         const start = new Date(signOn);
@@ -114,6 +43,37 @@ export default function Assignments() {
 
         return { elapsedDays, totalDays, percentage };
     };
+
+    const isLoading = isLoadingActive || isLoadingUpcoming || isLoadingHistory || isLoadingSeaTime || isLoadingStats;
+
+    // Remove the !
+    if (!isAddingAssignment) {
+        return <div className='flex justify-center items-center'><AddAssignment /></div>;
+    }
+
+    if (isLoading) {
+        return (
+            <div className="w-full space-y-6">
+                <div className="flex justify-between items-center">
+                    <Skeleton className="h-10 w-48" />
+                    <div className="flex gap-3">
+                        <Skeleton className="h-10 w-24" />
+                        <Skeleton className="h-10 w-32" />
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                    <Skeleton className="h-32 col-span-2" />
+                    <Skeleton className="h-32" />
+                    <Skeleton className="h-32" />
+                    <Skeleton className="h-32" />
+                </div>
+                <div className="space-y-4">
+                    <Skeleton className="h-64 w-full" />
+                    <Skeleton className="h-64 w-full" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full space-y-6">
@@ -132,7 +92,10 @@ export default function Assignments() {
                         <Download className="h-4 w-4 text-slate-400" />
                         <span>Export</span>
                     </button>
-                    <button className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 h-10 bg-[#0B2545] hover:opacity-90 text-white text-sm font-semibold rounded-md transition-colors shadow-sm cursor-pointer">
+                    <button
+                        onClick={() => setIsAddingAssignment(true)}
+                        className="flex-1 sm:flex-none justify-center flex items-center gap-2 px-4 h-10 bg-[#0B2545] hover:opacity-90 text-white text-sm font-semibold rounded-md transition-colors shadow-sm cursor-pointer"
+                    >
                         <Plus className="h-4 w-4" />
                         <span>New Assignment</span>
                     </button>
@@ -161,7 +124,7 @@ export default function Assignments() {
 
                     <div className="flex flex-row items-baseline gap-1 shrink-0 self-start sm:self-center">
                         <span className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                            {seaTime.totalSeaDays}
+                            {seaTime?.totalSeaDays || 0}
                         </span>
                         <span className="text-sm font-bold text-slate-500">days</span>
                     </div>
@@ -172,7 +135,7 @@ export default function Assignments() {
                             Active
                         </span>
                         <span className="text-4xl font-bold text-emerald-600 block mt-1">
-                            {stats.totalActive}
+                            {stats?.totalActive || 0}
                         </span>
                     </div>
                     <span className="text-xs text-slate-400 font-medium">Currently onboard</span>
@@ -184,7 +147,7 @@ export default function Assignments() {
                             Upcoming
                         </span>
                         <span className="text-4xl font-bold text-blue-600 block mt-1">
-                            {stats.totalUpcoming}
+                            {stats?.totalUpcoming || 0}
                         </span>
                     </div>
                     <span className="text-xs text-slate-400 font-medium">Within next 6 months</span>
@@ -196,7 +159,7 @@ export default function Assignments() {
                             Completed
                         </span>
                         <span className="text-4xl font-bold text-slate-900 block mt-1">
-                            {stats.totalHistory}
+                            {stats?.totalHistory || 0}
                         </span>
                     </div>
                     <span className="text-xs text-slate-400 font-medium">Lifetime contracts</span>
@@ -205,14 +168,19 @@ export default function Assignments() {
 
             <div className="space-y-4 pt-4">
                 <div className="flex items-center gap-6 border-b border-slate-200 overflow-x-auto whitespace-nowrap scrollbar-hide">
-                    {['Active 1', 'Upcoming 2', 'History 7', 'All 10'].map((tab, i) => (
+                    {[
+                        `Active ${stats?.totalActive || 0}`,
+                        `Upcoming ${stats?.totalUpcoming || 0}`,
+                        `History ${stats?.totalHistory || 0}`,
+                        `All ${stats?.all || 0}`
+                    ].map((tab, i) => (
                         <button
                             key={tab}
-                            className={`pb-3 text-sm font-semibold transition-colors ${
-                                i === 0
+                            onClick={() => setActiveTab(i)}
+                            className={`pb-3 text-sm font-semibold transition-colors ${i === activeTab
                                     ? 'text-slate-900 border-b-2 border-slate-900'
                                     : 'text-slate-500 hover:text-slate-700'
-                            }`}
+                                }`}
                         >
                             {tab}
                         </button>

@@ -1,19 +1,30 @@
-import { Search, Bell, MessageSquare, HelpCircle } from 'lucide-react';
+import { Search, Bell, MessageSquare, HelpCircle, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useAssignmentStore } from '@/features/assignments/store/useAssignmentStore';
 
 export function HeaderComponent() {
+    const { isAddingAssignment } = useAssignmentStore();
+
     return (
-        <header className="flex h-16 shrink-0 items-center border-b border-slate-300 px-6 ">
+        <header className="flex h-16 shrink-0 items-center border-b border-slate-300 px-6 bg-white">
             <div className="flex w-full items-center justify-between gap-4">
-                <div className="relative w-full max-w-sm search-bg rounded-md">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                        type="search"
-                        placeholder="Search across portal..."
-                        className="w-full pl-9 h-9 bg-slate-50/50 border-slate-300"
-                    />
-                </div>
+                {isAddingAssignment ? (
+                    <div className="flex items-center gap-2 text-sm font-medium">
+                        <span className="text-slate-400">Assignment</span>
+                        <ChevronRight className="h-4 w-4 text-slate-300" />
+                        <span className="text-slate-900 font-bold">Add Assignment</span>
+                    </div>
+                ) : (
+                    <div className="relative w-full max-w-sm search-bg rounded-md">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            type="search"
+                            placeholder="Search across portal..."
+                            className="w-full pl-9 h-9 bg-slate-50/50 border-slate-300"
+                        />
+                    </div>
+                )}
                 <div className="flex items-center gap-1">
                     <Button
                         variant="ghost"

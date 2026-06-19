@@ -1,7 +1,8 @@
 import { MoreVertical } from 'lucide-react';
+import type { Assignment } from '../types';
 
 interface AssignmentTableProps {
-    items: any[];
+    items: Assignment[];
 }
 
 export function AssignmentTable({ items }: AssignmentTableProps) {

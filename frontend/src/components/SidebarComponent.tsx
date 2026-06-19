@@ -71,7 +71,7 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
         <Sidebar
             collapsible="icon"
             {...props}
-            className={cn('border-y-0 border-slate-300', className)}
+            className={cn('border-y-0 border-slate-300 bg-white', className)}
         >
             <SidebarHeader className="p-4 md:p-6 group-data-[collapsible=icon]:p-4">
                 <div
