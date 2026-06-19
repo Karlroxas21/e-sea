@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "1472381c-e179-46ae-a00d-b60d9a3ad208",
+    "_postman_id": "334d3bba-2190-4b4c-a8f0-00780a6e60d4",
     "name": "E-Sea",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "40110647"
+    "_exporter_id": "55485082",
+    "_collection_link": "https://go.postman.co/collection/55485082-334d3bba-2190-4b4c-a8f0-00780a6e60d4?source=collection_link"
   },
   "item": [
     {
@@ -66,7 +67,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Length",
@@ -82,7 +83,7 @@
                 }
               ],
               "cookie": [],
-              "body": null
+              "body": ""
             }
           ]
         },
@@ -153,7 +154,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Length",
@@ -169,7 +170,7 @@
                 }
               ],
               "cookie": [],
-              "body": null
+              "body": ""
             }
           ]
         },
@@ -247,7 +248,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Type",
@@ -312,6 +313,74 @@
                 "api",
                 "auth",
                 "refresh"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Assignement",
+      "item": [
+        {
+          "name": "Assignments",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/assignments?status=Upcoming",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "assignments"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Upcoming"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Assignment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"vesselId\": \"cfbc8460-1234-4bc8-b570-5151593c6df5\",\r\n  \"positionId\": \"a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d\",\r\n  \"isPrimaryPosition\": true,\r\n  \"signOnPort\": \"NLRTM\",\r\n  \"signOnDate\": \"2026-03-12\",\r\n  \"signOffPort\": \"SGSIN\",\r\n  \"signOffDate\": \"2026-06-28\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/assignments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "assignments"
               ]
             }
           },
@@ -386,7 +455,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "Content-Type",
@@ -479,7 +548,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "Content-Type",
@@ -572,7 +641,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "Content-Type",
@@ -665,7 +734,7 @@
           },
           "status": "OK",
           "code": 200,
-          "_postman_previewlanguage": null,
+          "_postman_previewlanguage": "Text",
           "header": [
             {
               "key": "Content-Type",
@@ -810,41 +879,6 @@
       "response": []
     },
     {
-      "name": "Assignments",
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{jwt}}",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{base_url}}/v1/api/assignments?status=Upcoming",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "v1",
-            "api",
-            "assignments"
-          ],
-          "query": [
-            {
-              "key": "status",
-              "value": "Upcoming"
-            }
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "Sync Compliance",
       "request": {
         "auth": {
@@ -901,6 +935,30 @@
             "sea-time"
           ]
         }
+      },
+      "response": []
+    },
+    {
+      "name": "Vessels",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Principals",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Positions",
+      "request": {
+        "method": "GET",
+        "header": []
       },
       "response": []
     }
