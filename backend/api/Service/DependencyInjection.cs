@@ -14,7 +14,7 @@ public static class DependencyInjection
         services.AddScoped<IRecentActivityFeedService, RecentActivityFeedService>();
         services.AddScoped<ITrainingService, TrainingService>();
         services.AddScoped<IAssignmentService, AssignmentService>();
-
+        services.AddScoped<IVesselService, VesselService>();
         return services;
     }
 }
