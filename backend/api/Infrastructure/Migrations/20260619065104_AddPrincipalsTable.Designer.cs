@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ESeaDbContext))]
-    partial class ESeaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260619065104_AddPrincipalsTable")]
+    partial class AddPrincipalsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,8 +46,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("PositionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PrincipalId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Principal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("SignOffDate")
                         .HasColumnType("date");
@@ -81,8 +85,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PositionId");
-
-                    b.HasIndex("PrincipalId");
 
                     b.HasIndex("UserId");
 
@@ -518,12 +520,6 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Principal", "Principal")
-                        .WithMany()
-                        .HasForeignKey("PrincipalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("Assignments")
                         .HasForeignKey("UserId")
@@ -537,8 +533,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Position");
-
-                    b.Navigation("Principal");
 
                     b.Navigation("User");
 

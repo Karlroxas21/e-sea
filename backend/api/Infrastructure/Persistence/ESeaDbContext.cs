@@ -13,6 +13,7 @@ public class ESeaDbContext(DbContextOptions<ESeaDbContext> options) : DbContext(
     public DbSet<BlacklistedToken> BlacklistedTokens => Set<BlacklistedToken>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Assignments> Assignments => Set<Assignments>();
+    public DbSet<Principal> Principals => Set<Principal>();
     public DbSet<Vessles> Vessels => Set<Vessles>();
     public DbSet<Positions> Positions => Set<Positions>();
     public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();

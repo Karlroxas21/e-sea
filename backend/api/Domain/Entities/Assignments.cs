@@ -7,7 +7,8 @@ public class Assignments : Base
     public Guid VesselId { get; private set; }
     public Guid PositionId { get; private set; }
     public bool IsPrimaryPosition { get; private set; }
-    public string Principal { get; private set; } = null!;
+    public Guid PrincipalId { get; private set; }
+    public Principal Principal { get; private set; } = null!;
     public DateOnly SignOnDate { get; private set; }
     public DateOnly SignOffDate { get; private set; }
     public string SignOnPort { get; private set; } = null!;
@@ -23,7 +24,7 @@ public class Assignments : Base
         Guid userId, 
         Guid vesselId, 
         Guid positionId, 
-        string principal,
+        Guid principalId,
         DateOnly signOnDate, 
         DateOnly signOffDate, 
         string signOnPort, 
@@ -42,7 +43,7 @@ public class Assignments : Base
             VesselId = vesselId,
             PositionId = positionId,
             IsPrimaryPosition = true,
-            // Principal = principal,
+            PrincipalId = principalId,
             SignOnDate = signOnDate,
             SignOffDate = signOffDate,
             SignOnPort = signOnPort,
