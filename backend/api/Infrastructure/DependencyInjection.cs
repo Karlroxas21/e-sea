@@ -34,7 +34,8 @@ public static class DependencyInjection
         services.AddScoped<IVesselRepository, VesselRepository>();
         services.AddScoped<IPositionRepository, PositionRepository>();
         services.AddScoped<IPrincipalRepository, PrincipalRepository>();
-        
+        services.AddScoped<IPositionRepository, PositionRepository>();
+
         return services;
     }
 

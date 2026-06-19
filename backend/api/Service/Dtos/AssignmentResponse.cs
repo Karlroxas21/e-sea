@@ -5,7 +5,7 @@ namespace Service.Dtos;
 public record CreateAssignmentRequest(
     Guid VesselId,
     Guid PositionId,
-    string Principal,
+    Guid PrincipalId,
     DateOnly SignOnDate,
     DateOnly SignOffDate,
     string SignOnPort,

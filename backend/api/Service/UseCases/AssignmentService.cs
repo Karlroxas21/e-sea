@@ -65,7 +65,7 @@ public class AssignmentService : IAssignmentService
             userId,
             request.VesselId,
             request.PositionId,
-            request.Principal,
+            request.PrincipalId,
             request.SignOnDate,
             request.SignOffDate,
             request.SignOnPort,
