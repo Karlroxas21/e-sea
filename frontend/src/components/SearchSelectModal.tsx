@@ -24,6 +24,7 @@ type SearchSelectModalProps = {
     scrollRef?: React.RefObject<HTMLDivElement | null>;
     isLoading?: boolean;
     isFetchingNextPage?: boolean;
+    onScrollBottom?: () => void;
 };
 
 export const SearchSelectModal = ({
@@ -38,6 +39,7 @@ export const SearchSelectModal = ({
     scrollRef,
     isLoading = false,
     isFetchingNextPage = false,
+    onScrollBottom,
 }: SearchSelectModalProps) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -68,6 +70,13 @@ export const SearchSelectModal = ({
                 <div
                     ref={scrollRef}
                     className="max-h-[400px] overflow-y-auto border-t border-slate-100"
+                    onScroll={(e) => {
+                        if (!onScrollBottom) return;
+                        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+                        if (scrollHeight - scrollTop <= clientHeight + 50) {
+                            onScrollBottom();
+                        }
+                    }}
                 >
                     {isLoading ? (
                         <div className="p-4 space-y-3">

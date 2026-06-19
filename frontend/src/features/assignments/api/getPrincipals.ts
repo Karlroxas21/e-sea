@@ -1,28 +1,28 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
-import type { Vessel, PaginatedResponse } from '../types';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import type { Principal, PaginatedResponse } from '../types';
 
-type GetVesselsParams = {
+type GetPrincipalsParams = {
     page?: number;
     pageSize?: number;
     search?: string;
 };
 
-export const getVessels = ({
+export const getPrincipals = ({
     page = 1,
-    pageSize = 6,
+    pageSize = 10,
     search = '',
-}: GetVesselsParams): Promise<PaginatedResponse<Vessel>> => {
-    return api.get('/vessels', {
+}: GetPrincipalsParams): Promise<PaginatedResponse<Principal>> => {
+    return api.get('/principals', {
         params: { page, pageSize, ...(search && { search }) },
     });
 };
 
-export const useVessels = ({ search = '' }: { search?: string } = {}) => {
+export const usePrincipals = ({ search = '' }: { search?: string } = {}) => {
     return useInfiniteQuery({
-        queryKey: ['vessels', search],
+        queryKey: ['principals', search],
         queryFn: ({ pageParam = 1 }) =>
-            getVessels({ page: pageParam, search }),
+            getPrincipals({ page: pageParam, search }),
         initialPageParam: 1,
         getNextPageParam: (lastPage) => {
             if (lastPage.page < lastPage.totalPages) {

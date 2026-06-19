@@ -17,28 +17,25 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
+import { cn, safeString } from '@/lib/utils';
 import { useAssignmentStore } from '../store/useAssignmentStore';
 import { VesselSelectModal } from './VesselSelectModal';
-import type { Vessel } from '../types';
+import { PositionSelectModal } from './PositionSelectModal';
+import { PrincipalSelectModal } from './PrincipalSelectModal';
+import type { Vessel, Position, Principal } from '../types';
+import { createAssignment } from '../api/createAssignment';
+import { AssignmentSuccess } from './AssignmentSuccess';
 
 const formSchema = z.object({
-    vessel: z.string().min(3, 'Vessel is required'),
-    position: z.string().min(3, 'Position is required'),
-    principal: z.string().min(3, 'Principal is required'),
-    signOnPort: z.string().min(3, 'Sign-on port is required'),
+    vessel: safeString('Vessel'),
+    position: safeString('Position'),
+    principal: safeString('Principal'),
+    signOnPort: safeString('Sign-on port'),
     signOnDate: z.date(),
     signOffDate: z.date(),
-    signOffPort: z.string().min(3, 'Sign-off port is required'),
+    signOffPort: safeString('Sign-off port'),
 }).refine(
     (data) => data.signOffDate > data.signOnDate,
     {
@@ -51,8 +48,13 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const CreateAssignmentForm = () => {
     const { setIsAddingAssignment } = useAssignmentStore();
+    const [isSuccess, setIsSuccess] = useState(false);
     const [selectedVessel, setSelectedVessel] = useState<Vessel | null>(null);
+    const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
+    const [selectedPrincipal, setSelectedPrincipal] = useState<Principal | null>(null);
     const [vesselModalOpen, setVesselModalOpen] = useState(false);
+    const [positionModalOpen, setPositionModalOpen] = useState(false);
+    const [principalModalOpen, setPrincipalModalOpen] = useState(false);
     const [signOnOpen, setSignOnOpen] = useState(false);
     const [signOffOpen, setSignOffOpen] = useState(false);
 
@@ -78,9 +80,37 @@ export const CreateAssignmentForm = () => {
 
     const position = form.watch("position");
 
-    const onSubmit = (values: FormValues) => {
-        console.log("Values: ", values);
+    const onSubmit = async (values: FormValues) => {
+        if (!selectedVessel || !selectedPosition || !selectedPrincipal || !values.signOnDate || !values.signOffDate) return;
+
+        try {
+            await createAssignment({
+                vesselId: selectedVessel.id,
+                positionId: selectedPosition.id,
+                principalId: selectedPrincipal.id,
+                signOnPort: values.signOnPort,
+                signOnDate: format(values.signOnDate, 'yyyy-MM-dd'),
+                signOffPort: values.signOffPort,
+                signOffDate: format(values.signOffDate, 'yyyy-MM-dd')
+            });
+            form.reset();
+            setSelectedVessel(null);
+            setSelectedPosition(null);
+            setSelectedPrincipal(null);
+            setIsSuccess(true);
+        } catch (error) {
+            console.error('Failed to create assignment', error);
+        }
     };
+
+    if (isSuccess) {
+        return (
+            <AssignmentSuccess onClose={() => {
+                setIsSuccess(false);
+                setIsAddingAssignment(false);
+            }} />
+        );
+    }
 
     return (
         <div className="max-w-5xl mx-auto py-6 min-h-screen">
@@ -248,25 +278,27 @@ export const CreateAssignmentForm = () => {
                                                                     <span>Position</span>
                                                                     <span className="text-red-500 text-lg">*</span>
                                                                 </FormLabel>
-                                                                <Select
-                                                                    onValueChange={field.onChange}
-                                                                    defaultValue={field.value}
-                                                                >
-                                                                    <FormControl>
-                                                                        <SelectTrigger className="bg-white border-slate-200 h-11 text-slate-900">
-                                                                            <SelectValue placeholder="Select position" />
-                                                                        </SelectTrigger>
-                                                                    </FormControl>
-                                                                    <SelectContent>
-                                                                        <SelectItem value="Master">Master</SelectItem>
-                                                                        <SelectItem value="Chief Officer">
-                                                                            Chief Officer
-                                                                        </SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
+                                                                <FormControl>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setPositionModalOpen(true)}
+                                                                        className="flex h-11 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0a2547]/20 disabled:cursor-not-allowed disabled:opacity-50"
+                                                                    >
+                                                                        {field.value || <span className="text-slate-500">Select position</span>}
+                                                                        <ChevronRight className="h-4 w-4 opacity-50 rotate-90" />
+                                                                    </button>
+                                                                </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
+                                                    />
+                                                    <PositionSelectModal
+                                                        open={positionModalOpen}
+                                                        onOpenChange={setPositionModalOpen}
+                                                        onSelect={(position) => {
+                                                            setSelectedPosition(position);
+                                                            form.setValue('position', position.title, { shouldValidate: true });
+                                                        }}
                                                     />
                                                     <FormField
                                                         control={form.control}
@@ -279,24 +311,27 @@ export const CreateAssignmentForm = () => {
                                                                         Manning company
                                                                     </span>
                                                                 </FormLabel>
-                                                                <Select
-                                                                    onValueChange={field.onChange}
-                                                                    defaultValue={field.value}
-                                                                >
-                                                                    <FormControl>
-                                                                        <SelectTrigger className="bg-white border-slate-200 h-11 text-slate-900">
-                                                                            <SelectValue placeholder="Select principal" />
-                                                                        </SelectTrigger>
-                                                                    </FormControl>
-                                                                    <SelectContent>
-                                                                        <SelectItem value="Oceanic Shipping Ltd">
-                                                                            Oceanic Shipping Ltd
-                                                                        </SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
+                                                                <FormControl>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setPrincipalModalOpen(true)}
+                                                                        className="flex h-11 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0a2547]/20 disabled:cursor-not-allowed disabled:opacity-50"
+                                                                    >
+                                                                        {field.value || <span className="text-slate-500">Select principal</span>}
+                                                                        <ChevronRight className="h-4 w-4 opacity-50 rotate-90" />
+                                                                    </button>
+                                                                </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
+                                                    />
+                                                    <PrincipalSelectModal
+                                                        open={principalModalOpen}
+                                                        onOpenChange={setPrincipalModalOpen}
+                                                        onSelect={(principal) => {
+                                                            setSelectedPrincipal(principal);
+                                                            form.setValue('principal', principal.name, { shouldValidate: true });
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
@@ -325,7 +360,7 @@ export const CreateAssignmentForm = () => {
                                                                         type="button"
                                                                         variant="ghost"
                                                                         size="icon"
-                                                                        className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-300"
+                                                                        className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-300 hover:pointer-cursor"
                                                                         onClick={() => field.onChange('')}
                                                                     >
                                                                         <X className="h-4 w-4" />

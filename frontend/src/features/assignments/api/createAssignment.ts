@@ -3,14 +3,12 @@ import { type Assignment } from '../types';
 
 export type CreateAssignmentDTO = {
     vesselId: string;
-    vesselName: string;
-    imoNumber: string;
-    vesselType: string;
-    position: string;
-    signOnDate: string;
-    signOffDate: string;
+    positionId: string;
+    principalId: string;
     signOnPort: string;
+    signOnDate: string;
     signOffPort: string;
+    signOffDate: string;
 };
 
 export const createAssignment = (data: CreateAssignmentDTO): Promise<Assignment> => {
