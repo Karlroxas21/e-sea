@@ -33,7 +33,8 @@ public static class DependencyInjection
         services.AddScoped<IAssignmentRepository, AssignmentRepository>();
         services.AddScoped<IVesselRepository, VesselRepository>();
         services.AddScoped<IPositionRepository, PositionRepository>();
-
+        services.AddScoped<IPrincipalRepository, PrincipalRepository>();
+        
         return services;
     }
 
