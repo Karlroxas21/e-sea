@@ -7,16 +7,51 @@ public class Assignments : Base
     public Guid VesselId { get; private set; }
     public Guid PositionId { get; private set; }
     public bool IsPrimaryPosition { get; private set; }
+    public string Principal { get; private set; } = null!;
     public DateOnly SignOnDate { get; private set; }
     public DateOnly SignOffDate { get; private set; }
-    public string SignOnPort { get; private set; }
-    public string SignOffPort { get; private set; }
-    public string Status { get; private set; }
+    public string SignOnPort { get; private set; } = null!;
+    public string SignOffPort { get; private set; } = null!;
+    public string Status { get; private set; } = null!;
     public string? Warning { get; private set; }
     public int DurationDays { get; private set; }
-    public User User { get; private set; }
-    public Vessles Vessel { get; private set; }
-    public Positions Position { get; private set; }
+    public User User { get; private set; } = null!;
+    public Vessles Vessel { get; private set; } = null!;
+    public Positions Position { get; private set; } = null!;
+
+    public static Assignments Create(
+        Guid userId, 
+        Guid vesselId, 
+        Guid positionId, 
+        string principal,
+        DateOnly signOnDate, 
+        DateOnly signOffDate, 
+        string signOnPort, 
+        string signOffPort)
+    {
+        int duration = signOffDate.DayNumber - signOnDate.DayNumber;
+        if (duration < 0)
+        {
+            throw new ArgumentException("Sign-off date cannot be earlier than the Sign-on date.");
+        }
+
+        return new Assignments
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            VesselId = vesselId,
+            PositionId = positionId,
+            IsPrimaryPosition = true,
+            // Principal = principal,
+            SignOnDate = signOnDate,
+            SignOffDate = signOffDate,
+            SignOnPort = signOnPort,
+            SignOffPort = signOffPort,
+            Status = "upcoming",
+            DurationDays = duration,
+            Warning = "Scheduled"
+        };
+    }
 
     public void CheckCompliance()
     {

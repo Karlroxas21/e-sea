@@ -10,4 +10,5 @@ public interface IAssignmentService
     Task<PagedAssignmentResult<AssignmentResponse>> GetAllAsync(int Page, int PageSize, Status? status, BaseQuery? query, CancellationToken ct);
     Task SyncAssignmentWarningAsync(CancellationToken ct);
     Task<int> GetSeaTimeAcrossCompletedAssignments(CancellationToken ct);
+    Task<AssignmentResponse> CreateAsync(CreateAssignmentRequest request, CancellationToken ct);
 }

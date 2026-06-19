@@ -31,7 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IBlacklistedTokenRepository, BlacklistedTokenRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IAssignmentRepository, AssignmentRepository>();
-        services.AddScoped<IVesselsRepository, VesselsRepository>();
+        services.AddScoped<IVesselRepository, VesselRepository>();
         services.AddScoped<IPositionRepository, PositionRepository>();
 
         return services;

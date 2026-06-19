@@ -2,6 +2,15 @@ using Domain.Entities;
 
 namespace Service.Dtos;
 
+public record CreateAssignmentRequest(
+    Guid VesselId,
+    Guid PositionId,
+    string Principal,
+    DateOnly SignOnDate,
+    DateOnly SignOffDate,
+    string SignOnPort,
+    string SignOffPort
+);
 public record VesselRequirementResponse(
     Guid DocumentTypeId,
     string DocumentName

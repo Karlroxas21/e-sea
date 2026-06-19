@@ -103,8 +103,26 @@ public class AssignmentRepository : IAssignmentRepository
     {
         int totalDays = await _db.Assignments
             .Where(a => a.UserId == _userContext.UserId)
-            .SumAsync(a => EF.Functions.DateDiffDay(a.SignOnDate, a.SignOffDate));
+            .SumAsync(a => EF.Functions.DateDiffDay(a.SignOnDate, a.SignOffDate), ct);
 
         return totalDays;
+    }
+
+     public async Task AddAsync(Assignments assignment, CancellationToken ct)
+    {
+        await _db.Assignments.AddAsync(assignment, ct);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task<Assignments?> GetByIdAsync(Guid id, CancellationToken ct)
+    {
+        return await _db.Assignments
+            .Include(a => a.Vessel)
+                .ThenInclude(v => v.VesselRequirements)
+                    .ThenInclude(vr => vr.DocumentType)
+            .Include(a => a.User)
+                .ThenInclude(u => u.ComplianceAndRequirements)
+            .Include(a => a.Position)
+            .FirstOrDefaultAsync(a => a.Id == id, ct);
     }
 }

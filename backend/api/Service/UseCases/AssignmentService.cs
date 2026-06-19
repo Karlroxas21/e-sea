@@ -56,4 +56,26 @@ public class AssignmentService : IAssignmentService
     {
         return await _assignmentRepository.GetSeaTimeAcrossCompletedAssignments(ct);
     }
+
+    public async Task<AssignmentResponse> CreateAsync(CreateAssignmentRequest request, CancellationToken ct)
+    {
+        var userId = _userContext.UserId;
+
+        var assignment = Assignments.Create(
+            userId,
+            request.VesselId,
+            request.PositionId,
+            request.Principal,
+            request.SignOnDate,
+            request.SignOffDate,
+            request.SignOnPort,
+            request.SignOffPort
+        );
+
+        await _assignmentRepository.AddAsync(assignment, ct);
+
+        var fullyLoadedAssignment = await _assignmentRepository.GetByIdAsync(assignment.Id, ct);
+
+        return AssignmentResponse.FromEntity(fullyLoadedAssignment);
+    }
 }

@@ -10,4 +10,6 @@ public interface IAssignmentRepository
     Task<List<Assignments>> GetUpcomingAssignmentsAsync(Guid userId, CancellationToken ct);
     Task UpdateAsync(Assignments assignment, CancellationToken ct);
     Task<int> GetSeaTimeAcrossCompletedAssignments(CancellationToken ct);
+    Task AddAsync(Assignments assignment, CancellationToken ct);
+    Task<Assignments?> GetByIdAsync(Guid id, CancellationToken ct);
 }

@@ -3,6 +3,7 @@ using Domain.ValueObjects.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Ports;
+using Service.Dtos;
 
 namespace Entrypoint.Controllers;
 
@@ -47,5 +48,14 @@ public class AssignmentController : ControllerBase
         var num = await _assignmentService.GetSeaTimeAcrossCompletedAssignments(ct);
 
         return Ok(new { totalSeaDays = num });
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateAssignmentRequest request, CancellationToken ct)
+    {
+        var baseResponse = await _assignmentService.CreateAsync(request, ct);
+        
+        return Ok(baseResponse);
     }
 }
