@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/axios';
 import type { Assignment, SeaTime } from '../types';
 
-export const getAssignments = ({ status }: { status: string }): Promise<Assignment[]> => {
-    return api.get('/assignments', { params: { status } }).then((data: any) => data.items || data);
+export const getAssignments = ({ status, sort }: { status?: string; sort?: string }): Promise<Assignment[]> => {
+    return api.get('/assignments', { params: { status, sort } }).then((data: any) => data.items || data);
 };
 
-export const useAssignments = ({ status }: { status: string }) => {
+export const useAssignments = ({ status, sort }: { status?: string; sort?: string } = {}) => {
     return useQuery({
-        queryKey: ['assignments', status],
-        queryFn: () => getAssignments({ status }),
+        queryKey: ['assignments', status, sort],
+        queryFn: () => getAssignments({ status, sort }),
     });
 };
 

@@ -65,8 +65,8 @@ export const CreateAssignmentForm = () => {
             position: '',
             principal: '',
             signOnPort: '',
-            signOnDate: null,
-            signOffDate: null,
+            signOnDate: undefined,
+            signOffDate: undefined,
             signOffPort: '',
         },
     });
@@ -129,7 +129,7 @@ export const CreateAssignmentForm = () => {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="rounded-full h-8 w-8 text-slate-400"
+                    className="rounded-full h-8 w-8 text-slate-400 hover:cursor-pointer"
                     onClick={() => setIsAddingAssignment(false)}
                 >
                     <X className="h-4 w-4" />

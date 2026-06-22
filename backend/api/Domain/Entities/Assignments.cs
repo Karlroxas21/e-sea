@@ -50,7 +50,8 @@ public class Assignments : Base
             SignOffPort = signOffPort,
             Status = "upcoming",
             DurationDays = duration,
-            Warning = "Scheduled"
+            Warning = "Scheduled",
+            CreatedAt = DateTime.UtcNow
         };
     }
 
