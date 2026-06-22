@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IVesselService, VesselService>();
         services.AddScoped<IPrincipalService, PrincipalService>();
         services.AddScoped<IPositionService, PositionService>();
+        services.AddScoped<IChatService, ChatService>();
         
         return services;
     }
