@@ -2,9 +2,11 @@ import { Search, Bell, MessageSquare, HelpCircle, ChevronRight } from 'lucide-re
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAssignmentStore } from '@/features/assignments/store/useAssignmentStore';
+import { useChatStore } from '@/features/chat/store/useChatStore';
 
 export function HeaderComponent() {
     const { isAddingAssignment } = useAssignmentStore();
+    const { isChatOpen, setIsChatOpen } = useChatStore();
 
     return (
         <header className="flex h-16 shrink-0 items-center border-b border-slate-300 px-6 bg-white">
@@ -27,6 +29,7 @@ export function HeaderComponent() {
                 )}
                 <div className="flex items-center gap-1">
                     <Button
+                        onClick={() => setIsChatOpen(!isChatOpen)}
                         variant="ghost"
                         size="icon"
                         className="h-9 w-9 text-slate-600 rounded-full hover:bg-slate-100 relative"
