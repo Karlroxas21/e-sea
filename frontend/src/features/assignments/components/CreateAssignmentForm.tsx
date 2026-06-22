@@ -403,7 +403,7 @@ export const CreateAssignmentForm = () => {
                                                                         </FormControl>
                                                                     </PopoverTrigger>
                                                                     <PopoverContent
-                                                                        className="w-auto p-0"
+                                                                        className="w-auto p-3 rounded-2xl shadow-xl border border-slate-100 bg-white"
                                                                         align="start"
                                                                     >
                                                                         <Calendar
@@ -416,7 +416,7 @@ export const CreateAssignmentForm = () => {
                                                                             }}
                                                                             startMonth={new Date(2020, 0)}
                                                                             endMonth={new Date(2035, 11)}
-                                                                            className="[--cell-size:2.75rem]"
+                                                                            className="[--cell-size:2.5rem]"
                                                                         />
                                                                     </PopoverContent>
                                                                 </Popover>
@@ -454,7 +454,7 @@ export const CreateAssignmentForm = () => {
                                                                         </FormControl>
                                                                     </PopoverTrigger>
                                                                     <PopoverContent
-                                                                        className="w-auto p-0"
+                                                                        className="w-auto p-3 rounded-2xl shadow-xl border border-slate-100 bg-white"
                                                                         align="start"
                                                                     >
                                                                         <Calendar
@@ -467,7 +467,7 @@ export const CreateAssignmentForm = () => {
                                                                             }}
                                                                             startMonth={new Date(2020, 0)}
                                                                             endMonth={new Date(2035, 11)}
-                                                                            className="[--cell-size:2.75rem]"
+                                                                            className="[--cell-size:2.5rem]"
                                                                         />
                                                                     </PopoverContent>
                                                                 </Popover>

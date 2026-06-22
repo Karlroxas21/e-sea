@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { SidebarComponent } from '@/components/SidebarComponent';
 import { HeaderComponent } from '@/components/HeaderComponent';
+import { Chat } from '@/features/chat/components/chat';
 
 type MainLayoutProps = {
     children: React.ReactNode;
@@ -17,6 +18,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
                     {children}
                 </main>
             </SidebarInset>
+            <Chat />
         </SidebarProvider>
     );
 };
