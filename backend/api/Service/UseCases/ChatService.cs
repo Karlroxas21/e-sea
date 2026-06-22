@@ -1,13 +1,13 @@
 using Domain.Entities;
 using Domain.Ports;
+using Domain.ValueObjects.Chat;
 using Service.Ports;
-using Domain.DTOs;
 
 namespace Service.UseCases;
 
 public class ChatService(IChatRepository chatRepository) : IChatService
 {
-    public async Task<List<Domain.Ports.ChatSummaryResponse>> GetHistorySummaryAsync(Guid myUserId, CancellationToken ct)
+    public async Task<List<ChatSummaryResponse>> GetHistorySummaryAsync(Guid myUserId, CancellationToken ct)
     {
         return await chatRepository.GetHistorySummaryAsync(myUserId, ct);
     }
@@ -21,10 +21,5 @@ public class ChatService(IChatRepository chatRepository) : IChatService
     {
         var message = ChatMessage.Create(senderId, recipientId, content);
         await chatRepository.AddAsync(message, ct);
-    }
-
-    Task<List<Domain.DTOs.ChatSummaryResponse>> IChatService.GetHistorySummaryAsync(Guid myUserId, CancellationToken ct)
-    {
-        throw new NotImplementedException();
     }
 }

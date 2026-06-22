@@ -1,4 +1,4 @@
-namespace Domain.DTOs;
+namespace Domain.ValueObjects.Chat;
 
 public record ChatSummaryResponse(
     Guid OtherUserId, 

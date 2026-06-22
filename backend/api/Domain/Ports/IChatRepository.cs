@@ -1,5 +1,5 @@
 using Domain.Entities;
-
+using Domain.ValueObjects.Chat;
 
 namespace Domain.Ports;
 
@@ -10,8 +10,4 @@ public interface IChatRepository
     Task<List<ChatMessage>> GetConversationAsync(Guid myUserId, Guid otherUserId, CancellationToken ct);
     
     Task AddAsync(ChatMessage message, CancellationToken ct);
-}
-
-public class ChatSummaryResponse
-{
 }

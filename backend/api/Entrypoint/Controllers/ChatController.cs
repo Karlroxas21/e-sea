@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Service.Ports;
-using Domain.DTOs;
 
 namespace Entrypoint.Controllers;
 
@@ -9,7 +8,7 @@ namespace Entrypoint.Controllers;
 [Route("v1/api/chat")]
 public class ChatController(IChatService chatService) : ControllerBase
 {
-    [HttpGet("history")]
+    [HttpGet]
     public async Task<IActionResult> GetHistory(CancellationToken ct)
     {
         var myUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -22,7 +21,7 @@ public class ChatController(IChatService chatService) : ControllerBase
         return Ok(history);
     }
 
-    [HttpGet("user/{otherUserId:guid}")]
+    [HttpGet("{otherUserId:guid}")]
     public async Task<IActionResult> GetChat(Guid otherUserId, CancellationToken ct)
     {
         var myUserIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);

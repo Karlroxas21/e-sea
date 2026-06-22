@@ -1,5 +1,5 @@
 using Domain.Entities;
-using Domain.DTOs;
+using Domain.ValueObjects.Chat;
 
 namespace Service.Ports;
 

@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Ports;
+using Domain.ValueObjects.Chat;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -21,21 +22,20 @@ public class ChatRepository(ESeaDbContext context) : IChatRepository
             .Select(m => m.SenderId == myUserId ? m.RecipientId : m.SenderId)
             .ToList();
 
-        // Fetches users to attach their names
         var users = await context.Users
             .Where(u => otherUserIds.Contains(u.Id))
-            .ToDictionaryAsync(u => u.Id, u => u.Name, ct); 
+            .ToDictionaryAsync(u => u.Id, u => u.FullName ?? "Unknown User", ct); 
 
         return latestMessages.Select(m => 
         {
             var otherUserId = m.SenderId == myUserId ? m.RecipientId : m.SenderId;
-            var otherUserName = users.TryGetValue(otherUserId, out var name) ? name : "Unknown User";
+            var otherUserName = users.GetValueOrDefault(otherUserId, "Unknown User");
 
             return new ChatSummaryResponse(
-                OtherUserId: otherUserId,
-                OtherUserName: otherUserName,
-                LastMessage: m.Content,
-                SentAt: m.SentAt
+                otherUserId,
+                otherUserName,
+                m.Content,
+                m.SentAt
             );
         }).ToList();
     }
