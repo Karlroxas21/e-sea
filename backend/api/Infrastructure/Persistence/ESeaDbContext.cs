@@ -18,6 +18,7 @@ public class ESeaDbContext(DbContextOptions<ESeaDbContext> options) : DbContext(
     public DbSet<Positions> Positions => Set<Positions>();
     public DbSet<DocumentType> DocumentTypes => Set<DocumentType>();
     public DbSet<VesselRequirement> VesselRequirements => Set<VesselRequirement>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
