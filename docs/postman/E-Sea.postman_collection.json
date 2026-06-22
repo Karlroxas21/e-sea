@@ -361,11 +361,21 @@
         {
           "name": "Create Assignment",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"vesselId\": \"cfbc8460-1234-4bc8-b570-5151593c6df5\",\r\n  \"positionId\": \"a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d\",\r\n  \"isPrimaryPosition\": true,\r\n  \"signOnPort\": \"NLRTM\",\r\n  \"signOnDate\": \"2026-03-12\",\r\n  \"signOffPort\": \"SGSIN\",\r\n  \"signOffDate\": \"2026-06-28\"\r\n}",
+              "raw": "{\r\n  \"vesselId\": \"C971B269-E0F3-45A5-A859-00B824B554EE\",\r\n  \"positionId\": \"B1A155D2-EC5C-4EEA-8BC4-019981FF7AC8\",\r\n  \"principalId\": \"abf1bbe5-e843-4dd4-a2a8-20cdbecce56a\",\r\n  \"signOnPort\": \"NLRTM\",\r\n  \"signOnDate\": \"2026-03-12\",\r\n  \"signOffPort\": \"SGSIN\",\r\n  \"signOffDate\": \"2026-06-28\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -381,6 +391,108 @@
                 "v1",
                 "api",
                 "assignments"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Chat",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/chat",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "chat"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Chat",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/chat/9cf0064e-5b67-4fe3-c979-08ded04287ae",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "chat",
+                "9cf0064e-5b67-4fe3-c979-08ded04287ae"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Chat",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"recipientId\": \"7C528808-66C0-4F2F-7648-08DECD0ACB54\",\r\n  \"content\": \"Hey! This is a private message sent via SignalR.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/v1/api/chat",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "chat"
               ]
             }
           },
@@ -941,8 +1053,29 @@
     {
       "name": "Vessels",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/vessels",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "vessels"
+          ]
+        }
       },
       "response": []
     },
@@ -957,8 +1090,29 @@
     {
       "name": "Positions",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/v1/api/positions",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "positions"
+          ]
+        }
       },
       "response": []
     }
