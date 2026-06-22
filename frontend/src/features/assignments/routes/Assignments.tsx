@@ -18,11 +18,19 @@ export default function Assignments() {
         return () => reset();
     }, [reset]);
 
-    const { data: active = [], isLoading: isLoadingActive } = useAssignments({ status: 'CurrentlyOnboard' });
-    const { data: upcoming = [], isLoading: isLoadingUpcoming } = useAssignments({ status: 'Upcoming' });
-    const { data: history = [], isLoading: isLoadingHistory } = useAssignments({ status: 'Completed' });
-    const { data: seaTime, isLoading: isLoadingSeaTime } = useSeaTime();
-    const { data: stats, isLoading: isLoadingStats } = useAssignmentStats();
+    useEffect(() => {
+        refetchCompleted();
+        refetchUpcoming();
+        refetchCurrentlyOnboard();
+        refetchSeaTime();
+        refetchStats();
+    }, [isAddingAssignment]);
+
+    const { data: active = [], isLoading: isLoadingActive, refetch: refetchCurrentlyOnboard } = useAssignments({ status: 'CurrentlyOnboard' });
+    const { data: upcoming = [], isLoading: isLoadingUpcoming, refetch: refetchUpcoming } = useAssignments({ status: 'Upcoming', sort: 'created' });
+    const { data: history = [], isLoading: isLoadingHistory, refetch: refetchCompleted } = useAssignments({ status: 'Completed' });
+    const { data: seaTime, isLoading: isLoadingSeaTime, refetch: refetchSeaTime } = useSeaTime();
+    const { data: stats, isLoading: isLoadingStats, refetch: refetchStats } = useAssignmentStats();
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -47,7 +55,7 @@ export default function Assignments() {
     const isLoading = isLoadingActive || isLoadingUpcoming || isLoadingHistory || isLoadingSeaTime || isLoadingStats;
 
     // Remove the !
-    if (!isAddingAssignment) {
+    if (isAddingAssignment) {
         return <div className='flex justify-center items-center'><AddAssignment /></div>;
     }
 

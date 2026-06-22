@@ -1,20 +1,20 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Anchor } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Building2 } from 'lucide-react';
 import { SearchSelectModal } from '@/components/SearchSelectModal';
-import { useVessels } from '../api/getVessels';
-import type { Vessel } from '../types';
+import { usePrincipals } from '../api/getPrincipals';
+import type { Principal } from '../types';
 
-type VesselSelectModalProps = {
+type PrincipalSelectModalProps = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSelect: (vessel: Vessel) => void;
+    onSelect: (principal: Principal) => void;
 };
 
-export const VesselSelectModal = ({
+export const PrincipalSelectModal = ({
     open,
     onOpenChange,
     onSelect,
-}: VesselSelectModalProps) => {
+}: PrincipalSelectModalProps) => {
     const [search, setSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -25,6 +25,7 @@ export const VesselSelectModal = ({
         return () => clearTimeout(timer);
     }, [search]);
 
+    // Reset search when modal closes
     useEffect(() => {
         if (!open) {
             setSearch('');
@@ -38,12 +39,12 @@ export const VesselSelectModal = ({
         isFetchingNextPage,
         hasNextPage,
         fetchNextPage,
-    } = useVessels({ search: debouncedSearch });
+    } = usePrincipals({ search: debouncedSearch });
 
-    const vessels = data?.pages.flatMap((page) => page.items) ?? [];
+    const principals = data?.pages.flatMap((page) => page.items) ?? [];
 
-    const handleSelect = (vessel: Vessel) => {
-        onSelect(vessel);
+    const handleSelect = (principal: Principal) => {
+        onSelect(principal);
         onOpenChange(false);
     };
 
@@ -51,9 +52,9 @@ export const VesselSelectModal = ({
         <SearchSelectModal
             open={open}
             onOpenChange={onOpenChange}
-            title="Select a vessel"
-            description="Search the fleet by name, type, or IMO number."
-            searchPlaceholder="Search vessels..."
+            title="Select a principal"
+            description="Search manning companies by name."
+            searchPlaceholder="Search principals..."
             searchValue={search}
             onSearchChange={setSearch}
             scrollRef={scrollRef}
@@ -65,40 +66,31 @@ export const VesselSelectModal = ({
                 }
             }}
         >
-            {vessels.length === 0 && !isLoading ? (
+            {principals.length === 0 && !isLoading ? (
                 <div className="flex flex-col items-center justify-center py-12 text-slate-400">
-                    <Anchor className="h-8 w-8 mb-2 opacity-40" />
-                    <p className="text-sm font-medium">No vessels found</p>
+                    <Building2 className="h-8 w-8 mb-2 opacity-40" />
+                    <p className="text-sm font-medium">No principals found</p>
                     <p className="text-xs">Try a different search term</p>
                 </div>
             ) : (
-                vessels.map((vessel) => (
+                principals.map((principal) => (
                     <button
-                        key={vessel.id}
+                        key={principal.id}
                         type="button"
-                        onClick={() => handleSelect(vessel)}
+                        onClick={() => handleSelect(principal)}
                         className="flex items-center gap-3 w-full px-5 py-3.5 text-left hover:bg-slate-50 transition-colors cursor-pointer"
                     >
                         <div className="bg-[#0a2547] h-10 w-10 rounded-lg flex items-center justify-center shrink-0">
-                            <Anchor className="h-5 w-5 text-amber-500" />
+                            <Building2 className="h-5 w-5 text-amber-500" />
                         </div>
                         <div className="flex-1 min-w-0">
                             <div className="text-sm font-bold text-slate-900 truncate">
-                                {vessel.name}
-                            </div>
-                            <div className="text-[11px] text-slate-500 truncate">
-                                IMO {vessel.imoNumber} · {vessel.type}
+                                {principal.name}
                             </div>
                         </div>
-                        {vessel.flag && (
-                            <span className="text-[11px] font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">
-                                {vessel.flag}
-                            </span>
-                        )}
                     </button>
                 ))
             )}
-
         </SearchSelectModal>
     );
 };

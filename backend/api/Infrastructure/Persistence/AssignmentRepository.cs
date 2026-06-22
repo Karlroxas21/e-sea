@@ -45,6 +45,8 @@ public class AssignmentRepository : IAssignmentRepository
 
         q = ApplySort(q, query?.Sort, query?.Order);
 
+        Console.WriteLine("SORT " + query?.Sort);
+
         var totalCount = await q.CountAsync(ct);
 
         var items = await q

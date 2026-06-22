@@ -7,7 +7,13 @@ export type Vessel = {
 };
 
 export type Position = {
+    id: string;
     title: string;
+};
+
+export type Principal = {
+    id: string;
+    name: string;
 };
 
 export type Assignment = {
