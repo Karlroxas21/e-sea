@@ -60,4 +60,19 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
+    public async Task<List<User>> SearchUsersAsync(Guid myUserId, string query, CancellationToken ct = default)
+    {
+        var dbQuery = _db.Users
+            .AsNoTracking()
+            .Where(u => u.DeletedAt == null && u.Id != myUserId);
+
+        if (!string.IsNullOrEmpty(query))
+        {
+            var lowerQuery = query.ToLower();
+            dbQuery = dbQuery.Where(u => u.FullName.ToLower().Contains(lowerQuery) || u.Email.ToLower().Contains(lowerQuery));
+        }
+
+        return await dbQuery.ToListAsync(ct);
+    }
 }

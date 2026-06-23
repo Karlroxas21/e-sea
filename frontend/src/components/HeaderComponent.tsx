@@ -6,7 +6,7 @@ import { useChatStore } from '@/features/chat/store/useChatStore';
 
 export function HeaderComponent() {
     const { isAddingAssignment } = useAssignmentStore();
-    const { isChatOpen, setIsChatOpen } = useChatStore();
+    const { isChatOpen, setIsChatOpen, hasUnreadMessages } = useChatStore();
 
     return (
         <header className="flex h-16 shrink-0 items-center border-b border-slate-300 px-6 bg-white">
@@ -35,7 +35,9 @@ export function HeaderComponent() {
                         className="h-9 w-9 text-slate-600 rounded-full hover:bg-slate-100 relative"
                     >
                         <MessageSquare className="h-[18px] w-[18px]" />
-                        <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500" />
+                        {hasUnreadMessages && (
+                            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500 animate-pulse" />
+                        )}
                     </Button>
                     <Button
                         variant="ghost"

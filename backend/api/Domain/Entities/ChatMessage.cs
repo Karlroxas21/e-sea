@@ -13,6 +13,7 @@ public class ChatMessage : Base
         RecipientId = recipientId;
         Content = content;
         SentAt = DateTime.UtcNow;
+        CreatedAt = DateTime.UtcNow;
     }
 
     public static ChatMessage Create(Guid senderId, Guid recipientId, string content) 

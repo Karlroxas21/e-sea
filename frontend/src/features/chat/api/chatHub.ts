@@ -18,14 +18,23 @@ class ChatHubService {
     }
 
     public createConnection(token?: string) {
-        // TODO: Replace with actual API URL when ready
-        // Currently points to a placeholder endpoint
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const hubUrl = `${baseUrl}/chathub`;
+        if (this.connection) return this.connection;
+
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5146/v1/api';
+        let hubUrl = `${baseUrl}/chathub`;
+        try {
+            const parsedUrl = new URL(baseUrl);
+            hubUrl = `${parsedUrl.origin}/chathub`;
+        } catch {
+            // Fallback to relative path if not absolute
+            if (baseUrl.startsWith('/')) {
+                hubUrl = '/chathub';
+            }
+        }
         
         this.connection = new HubConnectionBuilder()
             .withUrl(hubUrl, {
-                accessTokenFactory: () => token || '',
+                accessTokenFactory: () => token || localStorage.getItem('authToken') || '',
             })
             .withAutomaticReconnect()
             .configureLogging(LogLevel.Information)

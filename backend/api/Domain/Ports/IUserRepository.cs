@@ -8,4 +8,5 @@ public interface IUserRepository
     Task<User> GetUserByEmail(string email, CancellationToken ct = default);
     Task<User> Login(string email, string password, CancellationToken ct = default);
     Task ForgotPassword(Guid id, string newPassword, CancellationToken ct = default);
+    Task<List<User>> SearchUsersAsync(Guid myUserId, string query, CancellationToken ct = default);
 }
