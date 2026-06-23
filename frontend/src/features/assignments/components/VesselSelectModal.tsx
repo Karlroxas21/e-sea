@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Anchor } from 'lucide-react';
 import { SearchSelectModal } from '@/components/SearchSelectModal';
 import { useVessels } from '../api/getVessels';

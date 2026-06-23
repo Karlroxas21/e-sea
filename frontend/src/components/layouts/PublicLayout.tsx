@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '@/providers/auth-provider';
 
 export const PublicLayout = () => {
-    const isAuthenticated = !!localStorage.getItem('authToken');
+    const { isAuthenticated } = useAuth();
     if (isAuthenticated) {
         return <Navigate to="/dashboard" replace />;
     }

@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/axios';
 import { NewsComponent } from '@/components/NewsComponent';
+import { useAuth } from '@/providers/auth-provider';
 
 interface ActivityItem {
     id: string;
@@ -34,6 +35,7 @@ interface ComplianceData {
 }
 
 function Dashboard() {
+    const { user } = useAuth();
     const [stats, setStats] = useState({
         activeTrainings: 0,
         pendingDocs: 0,
@@ -188,7 +190,7 @@ function Dashboard() {
                 <div className="flex flex-col gap-4">
                     <div>
                         <span className="text-slate-300 text-xs font-medium uppercase tracking-wider">
-                            Welcome back, Darryl
+                            Welcome back, {user?.fullName?.split(' ')[0] || 'User'}
                         </span>
                         <h2 className="text-2xl font-bold tracking-tight mt-1">
                             Your overall compliance is{' '}
@@ -200,7 +202,7 @@ function Dashboard() {
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-300">
                         <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4 text-slate-400" />
-                            <span>Status: Lined Up</span>
+                            <span>Status: {user?.currentStatus || 'Online'}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 text-slate-400" />

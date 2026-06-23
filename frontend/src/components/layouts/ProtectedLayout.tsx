@@ -1,9 +1,10 @@
 import { Suspense } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { MainLayout } from './MainLayout';
+import { useAuth } from '@/providers/auth-provider';
 
 export const ProtectedLayout = () => {
-    const isAuthenticated = !!localStorage.getItem('authToken');
+    const { isAuthenticated } = useAuth();
     if (!isAuthenticated) {
         return <Navigate to="/" replace />;
     }

@@ -11,10 +11,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
-import { api } from '@/lib/axios';
+import { useAuth } from '@/providers/auth-provider';
 
 export default function RegisterPage() {
     const navigate = useNavigate();
+    const { register } = useAuth();
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -27,7 +28,7 @@ export default function RegisterPage() {
         setError(null);
 
         try {
-            await api.post('/auth/register', {
+            await register({
                 email,
                 password,
                 fullName,
@@ -59,6 +60,11 @@ export default function RegisterPage() {
 
                 <CardContent>
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                        {error && (
+                            <div className="p-3 text-xs bg-red-50 text-red-600 rounded-lg border border-red-100 font-medium">
+                                {error}
+                            </div>
+                        )}
                         <div className="grid gap-2">
                             <Label htmlFor="fullName" className="text-slate-700">
                                 Full Name

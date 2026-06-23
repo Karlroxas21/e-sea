@@ -11,20 +11,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
-import { api } from '@/lib/axios';
-
-interface AuthResponse {
-    id: string;
-    jwt: string;
-    email: string;
-    fullName: string;
-    complianceScore: number;
-    currentStatus: string;
-    nextAssignmentDate: string;
-}
+import { useAuth } from '@/providers/auth-provider';
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -36,11 +27,8 @@ export default function LoginPage() {
         setError(null);
 
         try {
-            const data = await api.post<AuthResponse>('/auth/login', { email, password });
-            if (data?.jwt) {
-                localStorage.setItem('authToken', data.jwt);
-                navigate('/dashboard');
-            }
+            await login({ email, password });
+            navigate('/dashboard');
         } catch (err: any) {
             const errorMessage = err.response?.data?.message || 'Login failed.';
             setError(errorMessage);

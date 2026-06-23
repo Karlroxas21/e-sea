@@ -29,10 +29,10 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import UTSLogo from '@/assets/UTS.png';
 import UTSLogoIcon from '@/assets/UTS_LOGO.png';
-import { api } from '../lib/axios.ts';
+import { useAuth } from '@/providers/auth-provider';
 
 const mainNavItems = [
     { title: 'Dashboard', url: '/dashboard', icon: House, isActive: true },
@@ -53,15 +53,13 @@ const activityNavItems = [
 export function SidebarComponent({ className, ...props }: React.ComponentProps<typeof Sidebar>) {
     const { state, toggleSidebar } = useSidebar();
     const location = useLocation();
+    const { user, logout } = useAuth();
 
     const handleSignOut = async () => {
         try {
-            await api.post('/auth/logout');
+            await logout();
         } catch (error) {
             console.error('Sign out request failed:', error);
-        } finally {
-            localStorage.clear();
-            window.location.href = '/';
         }
     };
 
@@ -116,8 +114,8 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
                                                     : 'text-slate-500 hover:bg-slate-100',
                                             )}
                                         >
-                                            <a
-                                                href={item.url}
+                                            <Link
+                                                to={item.url}
                                                 className="flex items-center gap-3 w-full"
                                             >
                                                 <item.icon className="h-4 w-4 shrink-0" />
@@ -129,7 +127,7 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
                                                         {item.badge}
                                                     </span>
                                                 )}
-                                            </a>
+                                            </Link>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 );
@@ -168,13 +166,22 @@ export function SidebarComponent({ className, ...props }: React.ComponentProps<t
                 <div className="flex items-center justify-between w-full px-2 group-data-[collapsible=icon]:justify-center">
                     <div className="flex items-center gap-3">
                         <div className="h-9 w-9 rounded-full bg-[#0B2545] flex items-center justify-center text-white text-xs font-bold shrink-0">
-                            DS
+                            {user?.fullName
+                                ? user.fullName
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')
+                                      .toUpperCase()
+                                      .slice(0, 2)
+                                : 'U'}
                         </div>
                         <div className="flex flex-col group-data-[collapsible=icon]:hidden">
                             <span className="text-sm font-bold text-slate-900 leading-tight">
-                                Darryl Serdon
+                                {user?.fullName || 'User'}
                             </span>
-                            <span className="text-[10px] text-slate-500 font-medium">Demo 1</span>
+                            <span className="text-[10px] text-slate-500 font-medium">
+                                {user?.currentStatus || 'Online'}
+                            </span>
                         </div>
                     </div>
                     <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
