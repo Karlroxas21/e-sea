@@ -5,7 +5,7 @@ using Service.Ports;
 
 namespace Service.UseCases;
 
-public class ChatService(IChatRepository chatRepository) : IChatService
+public class ChatService(IChatRepository chatRepository, IUserRepository userRepository) : IChatService
 {
     public async Task<List<ChatSummaryResponse>> GetHistorySummaryAsync(Guid myUserId, CancellationToken ct)
     {
@@ -17,9 +17,16 @@ public class ChatService(IChatRepository chatRepository) : IChatService
         return await chatRepository.GetConversationAsync(myUserId, otherUserId, ct);
     }
 
-    public async Task SendMessageAsync(Guid senderId, Guid recipientId, string content, CancellationToken ct)
+    public async Task<ChatMessage> SendMessageAsync(Guid senderId, Guid recipientId, string content, CancellationToken ct)
     {
         var message = ChatMessage.Create(senderId, recipientId, content);
         await chatRepository.AddAsync(message, ct);
+        return message;
+    }
+
+    public async Task<List<UserSearchResponse>> SearchUsersAsync(Guid myUserId, string query, CancellationToken ct)
+    {
+        var users = await userRepository.SearchUsersAsync(myUserId, query, ct);
+        return users.Select(u => new UserSearchResponse(u.Id, u.FullName, u.Email)).ToList();
     }
 }
