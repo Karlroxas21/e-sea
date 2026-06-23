@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "d95f027c-f911-4a69-8f08-8f59e3ff8810",
-    "name": "E-Sea Copy",
+    "_postman_id": "334d3bba-2190-4b4c-a8f0-00780a6e60d4",
+    "name": "E-Sea",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "40110647"
+    "_exporter_id": "55485082",
+    "_collection_link": "https://go.postman.co/collection/55485082-334d3bba-2190-4b4c-a8f0-00780a6e60d4?source=collection_link"
   },
   "item": [
     {
@@ -16,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"kmr@me-ict.com\",\r\n    \"password\": \"Password@123\",\r\n    \"fullName\": \"Karl Marx Roxas\"\r\n}",
+              "raw": "{\r\n    \"email\": \"echo@me-ict.com\",\r\n    \"password\": \"Password@123\",\r\n    \"fullName\": \"Echo Echo\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -445,7 +446,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/v1/api/chat/9cf0064e-5b67-4fe3-c979-08ded04287ae",
+              "raw": "{{base_url}}/v1/api/chat/9CF0064E-5B67-4FE3-C979-08DED04287AE",
               "host": [
                 "{{base_url}}"
               ],
@@ -453,7 +454,7 @@
                 "v1",
                 "api",
                 "chat",
-                "9cf0064e-5b67-4fe3-c979-08ded04287ae"
+                "9CF0064E-5B67-4FE3-C979-08DED04287AE"
               ]
             }
           },
@@ -476,7 +477,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"recipientId\": \"7C528808-66C0-4F2F-7648-08DECD0ACB54\",\r\n  \"content\": \"Hey! This is a private message sent via SignalR.\"\r\n}",
+              "raw": "{\r\n  \"recipientId\": \"9CF0064E-5B67-4FE3-C979-08DED04287AE\",\r\n  \"content\": \"Hey! This is a private message sent via SignalR.\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -492,42 +493,6 @@
                 "v1",
                 "api",
                 "chat"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Search Users",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{jwt}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/v1/api/chat/users?query=cath",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "v1",
-                "api",
-                "chat",
-                "users"
-              ],
-              "query": [
-                {
-                  "key": "query",
-                  "value": "cath"
-                }
               ]
             }
           },
@@ -1101,7 +1066,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/v1/api/vessels",
+          "raw": "{{base_url}}/v1/api/vessels?search=Sea Voyager",
           "host": [
             "{{base_url}}"
           ],
@@ -1109,6 +1074,13 @@
             "v1",
             "api",
             "vessels"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "Sea Voyager",
+              "type": "text"
+            }
           ]
         }
       },
@@ -1117,10 +1089,40 @@
     {
       "name": "Principals",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{jwt}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": ""
+          "raw": "{{base_url}}/v1/api/principals?search=Nordic Tankers AG&=",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "api",
+            "principals"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "Nordic Tankers AG",
+              "type": "text"
+            },
+            {
+              "key": null,
+              "value": "",
+              "type": "text"
+            }
+          ]
         }
       },
       "response": []
@@ -1141,7 +1143,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/v1/api/positions",
+          "raw": "{{base_url}}/v1/api/positions?search=Able Seaman",
           "host": [
             "{{base_url}}"
           ],
@@ -1149,6 +1151,13 @@
             "v1",
             "api",
             "positions"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "Able Seaman",
+              "type": "text"
+            }
           ]
         }
       },
