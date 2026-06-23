@@ -10,15 +10,21 @@ import { type Contact } from '../types';
 import { api } from '@/lib/axios';
 import { chatHubService } from '../api/chatHub';
 import type { ChatHistory, SearchUser } from '../types/chat';
+import { HubConnectionState } from '@microsoft/signalr';
 
 export const Chat = () => {
-    const { isChatOpen, setIsChatOpen, setHasUnreadMessages } = useChatStore();
+    const { 
+        isChatOpen, 
+        setIsChatOpen, 
+        unreadCounts, 
+        incrementUnreadCount, 
+        clearUnreadCount 
+    } = useChatStore();
     const [activeUser, setActiveUser] = useState<Contact | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [messageInput, setMessageInput] = useState('');
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [searchResults, setSearchResults] = useState<Contact[]>([]);
-    const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
     const [showNewMessagesBadge, setShowNewMessagesBadge] = useState(false);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -26,11 +32,12 @@ export const Chat = () => {
 
     const isSearching = searchQuery.trim().length > 0;
 
-    // Sync hasUnreadMessages status to global store
+    // Clear unread counts for active chat partner
     useEffect(() => {
-        const hasUnread = Object.values(unreadCounts).some(count => count > 0);
-        setHasUnreadMessages(hasUnread);
-    }, [unreadCounts, setHasUnreadMessages]);
+        if (isChatOpen && activeUser) {
+            clearUnreadCount(activeUser.id);
+        }
+    }, [isChatOpen, activeUser?.id, clearUnreadCount]);
     
     const { messages, sendMessage, myUserId } = useChatHub(activeUser?.id);
 
@@ -87,17 +94,13 @@ export const Chat = () => {
         }
     }, []);
 
-    // Initial fetch and fetch when messages update (active chat messages)
+    // Fetch active chats (history) on load or when messages change
     useEffect(() => {
-        if (isChatOpen) {
-            fetchHistory();
-        }
-    }, [isChatOpen, messages, fetchHistory]);
+        fetchHistory();
+    }, [messages, fetchHistory]);
 
     // SignalR real-time update for contact list and unread counts
     useEffect(() => {
-        if (!isChatOpen) return;
-
         const token = localStorage.getItem('authToken') || undefined;
         const connection = chatHubService.createConnection(token);
 
@@ -106,19 +109,17 @@ export const Chat = () => {
             fetchHistory();
 
             // Increment unread count if message is from the other user and not currently active
-            const isFromMe = message.senderId === myUserId;
-            if (!isFromMe && (!activeUser || activeUser.id !== message.senderId)) {
-                setUnreadCounts(prev => ({
-                    ...prev,
-                    [message.senderId]: (prev[message.senderId] || 0) + 1
-                }));
+            const isFromMe = message.senderId?.toLowerCase() === myUserId?.toLowerCase();
+            const isChattingWithSender = isChatOpen && activeUser && activeUser.id?.toLowerCase() === message.senderId?.toLowerCase();
+            if (!isFromMe && !isChattingWithSender) {
+                incrementUnreadCount(message.senderId);
             }
         };
 
         const startAndListen = async () => {
             connection.on('ReceiveMessage', handleGlobalReceive);
 
-            if (connection.state === 'Disconnected') {
+            if (connection.state === HubConnectionState.Disconnected) {
                 try {
                     await connection.start();
                 } catch (e) {
@@ -132,7 +133,7 @@ export const Chat = () => {
         return () => {
             connection.off('ReceiveMessage', handleGlobalReceive);
         };
-    }, [isChatOpen, activeUser?.id, myUserId, fetchHistory]);
+    }, [isChatOpen, activeUser?.id, myUserId, fetchHistory, incrementUnreadCount]);
 
     // Search users in backend with debounce
     useEffect(() => {
@@ -159,8 +160,6 @@ export const Chat = () => {
         return () => clearTimeout(delayDebounce);
     }, [searchQuery, isSearching]);
 
-    if (!isChatOpen) return null;
-
     const handleClose = () => {
         setIsChatOpen(false);
         // Reset active user when closed
@@ -170,7 +169,7 @@ export const Chat = () => {
     const displayContacts = isSearching ? searchResults : contacts;
 
     return (
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[360px] h-[calc(100vh-8rem)] sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden animate-in slide-in-from-bottom-5 fade-in-20">
+        <div className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[360px] h-[calc(100vh-8rem)] sm:h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden animate-in slide-in-from-bottom-5 fade-in-20 ${!isChatOpen ? 'hidden' : ''}`}>
             {/* Header */}
             <div className="px-4 py-3 border-b border-slate-200 bg-slate-900 text-white flex justify-between items-center shrink-0">
                 <div className="flex items-center gap-3">
@@ -248,10 +247,7 @@ export const Chat = () => {
                                         key={contact.id}
                                         onClick={() => {
                                             setActiveUser(contact);
-                                            setUnreadCounts(prev => ({
-                                                ...prev,
-                                                [contact.id]: 0
-                                            }));
+                                            clearUnreadCount(contact.id);
                                         }}
                                         className="w-full flex items-center gap-3 p-2 hover:bg-slate-50 rounded-xl transition-colors text-left"
                                     >
@@ -265,9 +261,9 @@ export const Chat = () => {
                                                 <h4 className="text-sm font-semibold text-slate-900 truncate">{contact.name}</h4>
                                                 <div className="flex flex-col items-end shrink-0 gap-1">
                                                     <span className="text-[10px] text-slate-400">1d</span>
-                                                    {unreadCounts[contact.id] > 0 && (
+                                                    {unreadCounts[contact.id?.toLowerCase()] > 0 && (
                                                         <span className="bg-[#0B2545] text-white text-[9px] font-bold h-4 min-w-4 px-1 rounded-full flex items-center justify-center animate-in scale-in-50">
-                                                            {unreadCounts[contact.id]}
+                                                            {unreadCounts[contact.id?.toLowerCase()]}
                                                         </span>
                                                     )}
                                                 </div>

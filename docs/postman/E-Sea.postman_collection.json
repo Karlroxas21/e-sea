@@ -1,10 +1,9 @@
 {
   "info": {
-    "_postman_id": "334d3bba-2190-4b4c-a8f0-00780a6e60d4",
-    "name": "E-Sea",
+    "_postman_id": "d95f027c-f911-4a69-8f08-8f59e3ff8810",
+    "name": "E-Sea Copy",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "55485082",
-    "_collection_link": "https://go.postman.co/collection/55485082-334d3bba-2190-4b4c-a8f0-00780a6e60d4?source=collection_link"
+    "_exporter_id": "40110647"
   },
   "item": [
     {
@@ -493,6 +492,42 @@
                 "v1",
                 "api",
                 "chat"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/v1/api/chat/users?query=cath",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "v1",
+                "api",
+                "chat",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "cath"
+                }
               ]
             }
           },
@@ -1083,7 +1118,10 @@
       "name": "Principals",
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": ""
+        }
       },
       "response": []
     },
