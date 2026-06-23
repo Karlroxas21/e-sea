@@ -27,6 +27,13 @@ public class PrincipalRepository : IPrincipalRepository
             _ => desc ? q.OrderByDescending(p => p.CreatedAt) : q.OrderBy(p => p.CreatedAt)
         };
 
+        if (query != null && !string.IsNullOrWhiteSpace(query.Search))
+        {
+            var searchTerm = query.Search.Trim().ToLower();
+            
+            q = q.Where(v => v.Name.ToLower().Contains(searchTerm));
+        }
+
         int totalCount = await q.CountAsync(ct);
 
         var items = await q

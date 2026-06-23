@@ -26,6 +26,15 @@ public class VesselRepository : IVesselRepository
             _ => desc ? q.OrderByDescending(v => v.CreatedAt) : q.OrderBy(v => v.CreatedAt)
         };
 
+        if (query != null && !string.IsNullOrWhiteSpace(query.Search))
+        {
+            var searchTerm = query.Search.Trim().ToLower();
+            
+            q = q.Where(v => 
+                v.Name.ToLower().Contains(searchTerm) || 
+                v.Type.ToLower().Contains(searchTerm));
+        }
+
         int totalCount = await q.CountAsync(ct);
 
         var items = await q

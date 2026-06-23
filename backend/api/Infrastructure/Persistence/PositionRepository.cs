@@ -18,6 +18,13 @@ public class PositionRepository : IPositionRepository
     {
         var q = _context.Positions.AsQueryable();
 
+         if (query != null && !string.IsNullOrWhiteSpace(query.Search))
+        {
+            var searchTerm = query.Search.Trim().ToLower();
+            
+            q = q.Where(v => v.Title.ToLower().Contains(searchTerm));
+        }
+
         var totalCount = await q.CountAsync(ct);
         var items = await q
             .OrderBy(p => p.Title)
