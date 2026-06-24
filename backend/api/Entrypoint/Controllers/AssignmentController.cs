@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Ports;
 using Service.Dtos;
+using FluentValidation;
 
 namespace Entrypoint.Controllers;
 
@@ -52,8 +53,10 @@ public class AssignmentController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateAssignmentRequest request, CancellationToken ct)
+    public async Task<IActionResult> Create([FromBody] CreateAssignmentRequest request, [FromServices] IValidator<CreateAssignmentRequest> validator, CancellationToken ct)
     {
+        await validator.ValidateAndThrowAsync(request, ct);
+        
         var baseResponse = await _assignmentService.CreateAsync(request, ct);
         
         return Ok(baseResponse);

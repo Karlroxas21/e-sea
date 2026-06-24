@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +19,10 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest request, CancellationToken ct)
+    public async Task<IActionResult> Login(LoginRequest request, [FromServices] IValidator<LoginRequest> validator, CancellationToken ct)
     {
+        await validator.ValidateAndThrowAsync(request, ct);
+
         var response = await _authService.Login(request.Email, request.Password, ct);
 
         SetRefreshTokenCookie(response.RefreshToken);
@@ -45,8 +48,10 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserRegister request, CancellationToken ct)
+    public async Task<IActionResult> Register(UserRegister request, [FromServices] IValidator<UserRegister> validator, CancellationToken ct)
     {
+        await validator.ValidateAndThrowAsync(request, ct);
+        
         await _authService.Register(request, ct);
 
         return Ok();
