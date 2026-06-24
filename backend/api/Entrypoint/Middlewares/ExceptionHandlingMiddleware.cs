@@ -24,7 +24,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         {
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
             ConflictException => (StatusCodes.Status409Conflict, "Conflict"),
-            ValidationException => (StatusCodes.Status422UnprocessableEntity, "Validation Error"),
+            Domain.Exceptions.ValidationException => (StatusCodes.Status422UnprocessableEntity, "Validation Error"),
+            FluentValidation.ValidationException => (StatusCodes.Status422UnprocessableEntity, "Validation Error"),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error"),
         };
 
@@ -35,8 +36,19 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             Detail = ex.Message,
         };
 
+        if (ex is FluentValidation.ValidationException fvEx)
+        {
+            problem.Extensions["errors"] = fvEx.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray()
+                );
+        }
+
         context.Response.StatusCode = status;
         context.Response.ContentType = "application/problem+json";
         await context.Response.WriteAsJsonAsync(problem);
     }
 }
+

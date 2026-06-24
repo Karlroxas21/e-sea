@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Service.Ports;
 using Entrypoint.Hubs;
 using Service.Dtos;
+using FluentValidation;
 
 namespace Entrypoint.Controllers;
 
@@ -51,8 +52,13 @@ public class ChatController(IChatService chatService, IHubContext<SignalRHub> hu
     }
 
     [HttpPost]
-    public async Task<IActionResult> Send([FromBody] SendMessageRequest request, CancellationToken ct)
+    public async Task<IActionResult> Send(
+        [FromBody] SendMessageRequest request,
+        [FromServices] IValidator<SendMessageRequest> validator,
+        CancellationToken ct)
     {
+        await validator.ValidateAndThrowAsync(request, ct);
+
         var senderId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var message = await chatService.SendMessageAsync(senderId, request.RecipientId, request.Content, ct);
         

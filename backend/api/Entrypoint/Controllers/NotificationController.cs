@@ -5,6 +5,7 @@ using Entrypoint.Hubs;
 using Service.Ports;
 using Service.Dtos;
 using Domain.Ports;
+using FluentValidation;
 
 namespace Entrypoint.Controllers;
 
@@ -16,8 +17,13 @@ public class NotificationController(
 {
     private readonly IUserContext _userContext = userContext;
     [HttpPost("broadcast")]
-    public async Task<IActionResult> Broadcast([FromBody] BroadcastRequest request, CancellationToken ct)
+    public async Task<IActionResult> Broadcast(
+        [FromBody] BroadcastRequest request,
+        [FromServices] IValidator<BroadcastRequest> validator,
+        CancellationToken ct)
     {
+        await validator.ValidateAndThrowAsync(request, ct);
+
         var userId = _userContext.UserId;
        
         var senderId = userId;

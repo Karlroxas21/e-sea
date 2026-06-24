@@ -1,16 +1,19 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Domain.Ports;
+using Entrypoint.Hubs;
 using Entrypoint.Middlewares;
+using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Service;
-using Entrypoint.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
