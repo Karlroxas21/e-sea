@@ -22,9 +22,11 @@ public class NotificationController(
        
         var senderId = userId;
         
-        var notificationDto = new NotificationDto(senderId, request.Content, "Broadcast", DateTime.UtcNow);
+        var notificationDto = new NotificationDto(senderId, request.RecipientIds, request.Content, "Broadcast", DateTime.UtcNow);
 
-        await hubContext.Clients.All.SendAsync("ReceiveNotification", notificationDto, ct);
+        var groupNames = request.RecipientIds.Select(id => id.ToString()).ToList();
+
+        await hubContext.Clients.Groups(groupNames).SendAsync("ReceiveNotification", notificationDto, ct);
 
         return Ok(notificationDto);
     }

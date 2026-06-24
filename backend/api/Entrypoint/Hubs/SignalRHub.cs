@@ -53,15 +53,17 @@ public class SignalRHub(IChatService chatService) : Hub
         await Clients.Group(senderId.ToString()).SendAsync("ReceiveMessage", messageDto);
     }
 
-    public async Task BroadcastNotification(string content)
+    public async Task BroadcastNotification(BroadcastRequest request)
     {
         var userId = _userContext.UserId;
        
         var senderId = userId;
         
-        var notificationDto = new NotificationDto(senderId, content, "broadcast", DateTime.Now); 
+        var notificationDto = new NotificationDto(senderId, request.RecipientIds, request.Content, "broadcast", DateTime.Now); 
+        
+        var targetGroups = request.RecipientIds.Select(id => id.ToString()).ToList();
 
-        await Clients.All.SendAsync("ReceiveNotification", notificationDto);
+        await Clients.Groups(targetGroups).SendAsync("ReceiveNotification", notificationDto);
     }
 }
 
