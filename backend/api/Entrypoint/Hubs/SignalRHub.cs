@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Service.Ports;
 using Service.Dtos;
+using Domain.Ports;
 
 namespace Entrypoint.Hubs;
 
 [Authorize]
-public class ChatHub(IChatService chatService) : Hub
+public class SignalRHub(IChatService chatService) : Hub
 {
+    private readonly IUserContext _userContext;
     public override async Task OnConnectedAsync()
     {
         var myUserId = Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -49,6 +51,17 @@ public class ChatHub(IChatService chatService) : Hub
 
         await Clients.Group(request.ReceiverId.ToString()).SendAsync("ReceiveMessage", messageDto);
         await Clients.Group(senderId.ToString()).SendAsync("ReceiveMessage", messageDto);
+    }
+
+    public async Task BroadcastNotification(string content)
+    {
+        var userId = _userContext.UserId;
+       
+        var senderId = userId;
+        
+        var notificationDto = new NotificationDto(senderId, content, "broadcast", DateTime.Now); 
+
+        await Clients.All.SendAsync("ReceiveNotification", notificationDto);
     }
 }
 

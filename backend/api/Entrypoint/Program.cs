@@ -109,8 +109,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-// app.MapHub<ChatHub>("/hubs/chat");
-app.MapHub<ChatHub>("/chathub");
+
+app.MapHub<SignalRHub>("/chathub");
 
 await app.MigrateDbAsync();
 app.Run();

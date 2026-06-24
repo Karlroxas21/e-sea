@@ -9,7 +9,7 @@ namespace Entrypoint.Controllers;
 
 [ApiController]
 [Route("v1/api/chat")]
-public class ChatController(IChatService chatService, IHubContext<ChatHub> hubContext) : ControllerBase
+public class ChatController(IChatService chatService, IHubContext<SignalRHub> hubContext) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetHistory(CancellationToken ct)
@@ -70,5 +70,3 @@ public class ChatController(IChatService chatService, IHubContext<ChatHub> hubCo
         return Ok(messageDto);
     }
 }
-
-public record SendMessageRequest(Guid RecipientId, string Content);
