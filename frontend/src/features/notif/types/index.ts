@@ -1,17 +1,14 @@
-export interface NotificationPayload {
-    message: string;
-    data: Data;
-}
-
-export interface Data {
+export interface NotificationItem {
     id: string;
-    senderId: string;
-    receiverId: string;
-    content: string;
-    createdAt: Date;
+    title: string;
+    description: string;
+    createdAt: string;
+    activityType?: string;
 }
 
 export interface NotificationContextType {
-    notification: NotificationPayload[];
+    notifications: NotificationItem[];
     isConnected: boolean;
-}
+    hasUnread: boolean;
+    markAllAsRead: () => void;
+}
