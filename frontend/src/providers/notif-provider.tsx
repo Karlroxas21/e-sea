@@ -1,8 +1,9 @@
 import { type NotificationItem, type NotificationContextType } from "@/features/notif/types";
 import { createContext, useContext, useEffect, useState, type FC, type ReactNode } from "react";
 import { useAuth } from "./auth-provider";
-import { notificationHubService } from "@/features/notif/api/notif-hub";
+import { chatHubService } from "@/features/chat/api/chatHub";
 import { HubConnectionState } from "@microsoft/signalr";
+import { showNotificationToast } from "@/features/notif/utils/toast";
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
@@ -20,7 +21,7 @@ export const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) 
     // Handle SignalR
     useEffect(() => {
         if (!isAuthenticated) {
-            const connection = notificationHubService.getConnection();
+            const connection = chatHubService.getConnection();
             if (connection) {
                 connection.stop();
             }
@@ -28,7 +29,7 @@ export const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) 
             return;
         }
         const token = localStorage.getItem('authToken') || undefined;
-        const connection = notificationHubService.createConnection(token);
+        const connection = chatHubService.createConnection(token);
 
         const startConnection = async () => {
             if (connection.state === HubConnectionState.Disconnected) {
@@ -46,14 +47,15 @@ export const NotificationProvider: FC<{ children: ReactNode }> = ({ children }) 
         const handleReceiveNotification = (payload: any) => {
             const newItem: NotificationItem = {
                 id: payload.id || new Date().getTime().toString(),
-                title: payload.title || payload.message || 'Notification',
-                description: payload.description || (payload.data?.content) || '',
+                title: payload.title || payload.message || payload.type || 'Notification',
+                description: payload.description || payload.content || (payload.data?.content) || '',
                 createdAt: payload.createdAt || new Date().toISOString(),
-                activityType: payload.activityType || 'Notification'
+                activityType: payload.activityType || payload.type || 'Notification'
             };
             setNotifications((prev) => [newItem, ...prev]);
 
             // Trigger UI Alert (toast notification, web notification)
+            showNotificationToast(newItem.title, newItem.description);
             console.log('Notification received:', newItem);
         };
 

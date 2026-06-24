@@ -18,14 +18,14 @@ class NotificationHubService {
         if (this.connection) return this.connection;
 
         const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5146/v1/api';
-        let hubUrl = `${baseUrl}/notificationhub`;
+        let hubUrl = `${baseUrl}/chathub`;
 
         try {
             const parsedUrl = new URL(baseUrl);
-            hubUrl = `${parsedUrl.origin}/notificationhub`;
+            hubUrl = `${parsedUrl.origin}/chathub`;
         } catch {
             if (baseUrl.startsWith('/')) {
-                hubUrl = '/notificationhub';
+                hubUrl = '/chathub';
             }
         }
 

@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './auth-provider';
 import { NotificationProvider } from './notif-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
             <AuthProvider>
                 <NotificationProvider>
                     <Router>{children}</Router>
+                    <Toaster position="top-right" />
                 </NotificationProvider>
             </AuthProvider>
         </QueryClientProvider>
