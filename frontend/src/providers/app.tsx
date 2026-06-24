@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './auth-provider';
+import { NotificationProvider } from './notif-provider';
 
 const queryClient = new QueryClient();
 
@@ -13,7 +14,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     return (
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <Router>{children}</Router>
+                <NotificationProvider>
+                    <Router>{children}</Router>
+                </NotificationProvider>
             </AuthProvider>
         </QueryClientProvider>
     );
